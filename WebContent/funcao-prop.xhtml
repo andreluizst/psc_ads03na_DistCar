@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html 
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+>
+
+<h:head><title>Função</title> </h:head>
+<h:outputStylesheet name="styles-PSC.css" library="css"></h:outputStylesheet>
+<body>
+	<f:view id="viewEntrada">
+		
+		<h:form id="frmMensagens">
+			<p:messages id="messages" showDetail="false" autoUpdate="true" closable="true"></p:messages>
+		</h:form>
+		
+  		<h:form id="frmFuncao">
+  			<p:panel id="panelFuncao" header="DistCar - #{funcaoBean.tituloOperacao}">
+  				<h:panelGrid columns="3" cellpadding="5">
+  					<h:outputLabel for="descricao" value="Descrição: *"/>
+  					<p:inputText id="descricao" value="#{funcaoBean.funcao.descricao}" lable="Descrição"
+  							readonly="#{funcaoBean.somenteLeitura}"
+  							required="true" requiredMessage="Informe a descrição!"/>
+  					<p:message for="descricao"/>
+  					
+  					<h:outputLabel for="salario" value="Salário: *" />
+  					<p:inputText id="salario" validatorMessage="O valor do salário deve ser maior que 680!" converterMessage="Digite um número decimal no formato 999.00" 
+  								value="#{funcaoBean.funcao.salario}" dir="rtl" lable="Salário"
+  								readonly="#{funcaoBean.somenteLeitura}"
+  								required="true" requiredMessage="O salário deve ser informado!">
+  						<f:convertNumber minFractionDigits="2"/>
+  						<f:validateLongRange minimum="680"></f:validateLongRange>
+  					</p:inputText>
+  					<p:message for="salario"></p:message>
+  					
+  					<h:outputLabel for="situacao" value="Situação: "/>
+  					<p:selectOneMenu id="situacao" value="#{funcaoBean.funcao.situacao}"
+  								readonly="#{funcaoBean.somenteLeitura}"
+  								disabled="#{funcaoBean.somenteLeitura}" >
+  						<f:selectItem itemLabel="Selecione uma opção" itemValue="#{null}" />
+  						<f:selectItems value="#{funcaoBean.situacoes}" />
+  					</p:selectOneMenu>
+  					
+  				</h:panelGrid>
+
+  				<p:commandButton value="Salvar" rendered="#{!funcaoBean.somenteLeitura}" 
+  						disabled="#{funcaoBean.somenteLeitura}" 
+  						update="panelFuncao" action="#{funcaoBean.salvar}"/>
+  				
+  				<p:commandButton value="#{funcaoBean.textoBotaoFecharOuCancelar}" 
+  								immediate="true" action="#{funcaoBean.cancelar}" />
+
+  			</p:panel>
+    		
+  		</h:form>
+ 	</f:view>
+</body>
+</html>

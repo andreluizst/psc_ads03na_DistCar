@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+	<title>Carros</title>
+	<h:outputStylesheet name="styles-PSC.css" library="css"></h:outputStylesheet>
+</h:head>
+<ui:composition template="templates/template-geral.xhtml">
+<ui:define name="principal">
+<h:body>
+	<f:view id="View">
+	<h:form id="frmMensagens">
+			<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"></p:messages>
+		</h:form>
+		<h:form id="form">
+
+			<p:growl id="messages" showDetail="true" />
+
+			<p:confirmDialog id="dlgMsg" global="true" showEffect="fade"
+				hideEffect="explode">
+				<p:commandButton value="Sim" type="button"
+					styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+				<p:commandButton value="Não" type="button"
+					styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+			</p:confirmDialog>
+
+			<p:panel id="panel" header="DistCar - Carro"
+				style="margin-bottom:10px;">
+
+				<h:panelGrid columns="2" cellpadding="5">
+
+				<h:outputLabel for="chassi" value="Chassi *" />
+					<p:inputText id="chassi" maxlength="17"
+						value="#{carroBean.carro.chassi}"  required="true"
+						label="Chassi" requiredMessage="Nome obrigatório: *" />
+						
+					<h:outputLabel for="cor" value="Cor: *" />
+					<p:inputText id="cor" required="true"
+					requiredMessage="Cor obrigatório: *"
+						value="#{carroBean.carro.cor}"
+						 label="Cor" />
+				
+						
+					<h:outputLabel for="ano" value="Ano de Fabricação: *" />
+					<p:inputText id="ano" requerid="true" requiredMessage="Ano obrigatório: *"
+					maxlength="4" value="#{carroBean.carro.anoFabricacao}"
+						label="Ano" />
+					
+
+					<h:outputLabel for="fabricante" value="Fabricante: * " />
+					<p:selectOneMenu id="fabricante" converter="FabricanteConverter"
+					required="true" requiredMessage="Fabricante: obrigatório: *"
+						 valueChangeListener="#{carroBean.filtrarMarca}"
+						 value="#{carroBean.carro.versao.modeloCarro.marcaCarro.fabricante}">
+						<f:selectItem noSelectionOption="true"
+							itemLabel="Selecione o fabricante" itemValue="-1"/>
+						<f:selectItems value="#{carroBean.fabricantes}" var="f"
+							itemLabel="#{f.pj.nome}" itemValue="#{f}" />
+							<f:ajax render="marca modelo versao item acessorio valor" event="valueChange"/>
+  					</p:selectOneMenu>
+  				
+  					
+  					<h:outputLabel for="marca" value="Marca: * " />
+					<p:selectOneMenu id="marca" converter="MarcaConverter"
+					required="true" requiredMessage="Marca: obrigatório: *"
+						 valueChangeListener="#{carroBean.filtrarModelo}"
+						  value="#{carroBean.carro.versao.modeloCarro.marcaCarro}">
+						<f:selectItem noSelectionOption="true"
+							itemLabel="Selecione a marca" itemValue="-1"/>
+						<f:selectItems value="#{carroBean.marcas}" var="m"
+							itemLabel="#{m.descricao}" itemValue="#{m}" />
+							<f:ajax render="modelo versao item acessorio valor" event="valueChange"/>
+  					</p:selectOneMenu>
+  				
+  					
+  					<h:outputLabel for="modelo" value="Modelo: * " />
+					<p:selectOneMenu id="modelo" converter="ModeloCarroConverter"
+					required="true" requiredMessage="Modelo: obrigatório: *"
+						 valueChangeListener="#{carroBean.filtrarVersao}"
+						  value="#{carroBean.carro.versao.modeloCarro}">
+						<f:selectItem noSelectionOption="true"
+							itemLabel="Selecione o modelo" itemValue="-1"/>
+						<f:selectItems value="#{carroBean.modelos}" var="mo"
+							itemLabel="#{mo.descricao} #{mo.ano}" itemValue="#{mo}" />
+							<f:ajax render="versao item acessorio valor" event="valueChange"/>
+  					</p:selectOneMenu>
+  					
+  					
+  					<h:outputLabel for="versao" value="Versão: * " />
+					<p:selectOneMenu id="versao" converter="VersaoConverter"
+					required="true" requiredMessage="Versão obrigatório: *"
+						 value="#{carroBean.carro.versao}" 
+						  valueChangeListener="#{carroBean.filtrarItensAces}">
+						<f:selectItem noSelectionOption="true"
+							itemLabel="Selecione a versão" itemValue="-1"/>
+						<f:selectItems value="#{carroBean.versoes}" var="v"
+							itemLabel="#{v.descricao}" itemValue="#{v}" />
+							<f:ajax render="item acessorio valor" event="valueChange"/>
+  					</p:selectOneMenu>
+  				
+  						<h:outputLabel for="valor" value="Valor Carro: *" />
+					<p:inputText id="valor" disabled="true"
+						value="#{carroBean.carro.valorCarro}"
+						requerid="false" label="valor" />
+  					
+  					 <h:panelGrid columns="2" style="margin-bottom:5px" cellpadding="5">  
+					<h:outputText value="Itens: *"/>  
+        				<p:selectManyCheckbox id="item" converter="ItensConverter" 
+        				value="#{carroBean.carro.versao.itens}"
+        				  layout="pageDirection" columns="2" disabled="true">  
+           				    <f:selectItems value="#{carroBean.itens}" var="i" 
+           				      itemLabel="#{i.descricao}" itemValue="#{i}"  />  
+       					</p:selectManyCheckbox>
+       					</h:panelGrid> 
+       					
+       				<h:panelGrid columns="2" style="margin-bottom:5px" cellpadding="5">  	
+					<h:outputText value="Acessórios: *"  />  
+        				<p:selectManyCheckbox id="acessorio" converter="AcessoriosConverter" 
+        				value="#{carroBean.carro.versao.acessorios}"
+        				 layout="pageDirection" columns="2" disabled="true">  
+           				    <f:selectItems value="#{carroBean.acessorios}" var="a"
+           				    itemLabel="#{a.descricao}" itemValue="#{a}"/>
+       					</p:selectManyCheckbox>
+				</h:panelGrid> 
+  
+					<h:outputLabel for="centro" value="Centros: *" />
+  					<p:selectOneMenu id="centro" value="#{carroBean.carro.centro}" converter="CentroConverter"
+  					required="true" requiredMessage="Centro obrigatório: *" >
+  						<f:selectItem noSelectionOption="true"
+							itemLabel="Selecione a Centro" itemValue="-1"/>
+						<f:selectItems value="#{carroBean.centros}" var="c"
+							itemLabel="#{c.alias}" itemValue="#{c}" />
+  					</p:selectOneMenu>
+
+					<h:outputLabel for="status" value="Status: *" />
+  					<p:selectOneMenu id="status" value="#{carroBean.carro.status}" 
+  					required="true" requiredMessage="Status obrigatório: *">
+  						<f:selectItem itemLabel="Selecione uma opção" itemValue="" />
+  						<f:selectItems value="#{carroBean.status}" />
+  					</p:selectOneMenu>	
+				</h:panelGrid> 
+				<p:commandButton value="Salvar"  update="form" action="#{carroBean.salvar}" />
+   				<p:commandButton value="Cancelar" update="form" immediate="true" action="#{carroBean.cancelar}" />
+			</p:panel>
+		</h:form>
+	</f:view>
+</h:body>
+</ui:define>
+</ui:composition>
+</html>

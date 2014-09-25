@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+	<title>Versão_Carro</title>
+	<h:outputStylesheet name="styles-PSC.css" library="css"></h:outputStylesheet>
+</h:head>
+<ui:composition template="templates/template-geral.xhtml">
+<ui:define name="principal">
+<h:body>
+	<f:view id="View">
+	<h:form id="frmMensagens">
+			<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"></p:messages>
+		</h:form>
+		<h:form id="form">
+
+			<p:confirmDialog id="dlgMsg" global="true" showEffect="fade"
+				hideEffect="explode">
+				<p:commandButton value="Sim" type="button"
+					styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+				<p:commandButton value="Não" type="button"
+					styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+			</p:confirmDialog>
+
+			<p:panel id="panel" header="DistCar - Versão Carro"
+				style="margin-bottom:10px;">
+
+				<h:panelGrid columns="2" cellpadding="5">
+
+					
+					<h:outputLabel for="descricao" value="Descricão: *" />
+					<p:inputText id="descricao"
+						value="#{versaoBean.versaoCarro.descricao}"  required="false"
+						label="Descricão" requiredMessage="Descricação: obrigatório: *" />
+
+				
+
+					<h:outputLabel for="fabricante" value="Fabricante: * " />
+					<p:selectOneMenu id="fabricante" converter="FabricanteConverter"
+						 valueChangeListener="#{versaoBean.filtrarMarca}" 
+						 value="#{versaoBean.f}"> 
+						<f:selectItem noSelectionOption="true"
+							itemLabel="Selecione o fabricante" itemValue="-1"/>
+						<f:selectItems value="#{versaoBean.fabricantes}" var="f"
+							itemLabel="#{f.pj.nome}" itemValue="#{f}" />
+							<f:ajax render="marca modelo valor" event="valueChange"/>
+  					</p:selectOneMenu>
+  	
+  					
+  					<h:outputLabel for="marca" value="Marca: * " />
+					<p:selectOneMenu id="marca" converter="MarcaConverter"
+						 valueChangeListener="#{versaoBean.filtrarModelo}"
+						 value="#{versaoBean.m}" >
+						<f:selectItem noSelectionOption="true"
+							itemLabel="Selecione a marca" itemValue="-1"/>
+						<f:selectItems value="#{versaoBean.marcas}" var="m"
+							itemLabel="#{m.descricao}" itemValue="#{m}" />
+							<f:ajax render="modelo valor" event="valueChange"/>
+  					</p:selectOneMenu>
+  	
+
+					<h:outputLabel for="modelo" value="Modelo: * " />
+					<p:selectOneMenu id="modelo" converter="ModeloCarroConverter"
+						value="#{versaoBean.versaoCarro.modeloCarro}"  valueChangeListener="#{versaoBean.filtrarItens}">
+						<f:selectItem noSelectionOption="true"
+							itemLabel="Selecione o Modelo" itemValue="-1"/>
+						<f:selectItems value="#{versaoBean.modelos}" var="m"
+							itemLabel="#{m.descricao} #{m.ano}" itemValue="#{m}" />
+							<f:ajax render="situacao" event="valueChange"/>
+					</p:selectOneMenu>
+					
+							
+					<h:outputLabel for="valor" value="Valor Modelo: *" />
+					<p:inputText id="valor" disabled="false"
+						converterMessage="Digite um número decimal no formato 999.00"
+						value="#{versaoBean.versaoCarro.valor}"
+						label="Valor"/>
+
+					<h:outputLabel for="situacao" value="Situação: *" />
+  					<p:selectOneMenu id="situacao" value="#{versaoBean.versaoCarro.situacao}" >
+  						<f:selectItem itemLabel="Selecione uma opção" itemValue="" />
+  						<f:selectItems value="#{versaoBean.situacoes}" />
+  					</p:selectOneMenu>
+				</h:panelGrid> 
+				<p:commandButton value="Consultar" update="form"
+					action="#{versaoBean.consultar}" />	
+					
+				<p:commandButton value="Novo" update="form" immediate="true"
+					action="#{versaoBean.novo}" />
+				<p:commandButton value="Alterar" update="panel" 
+					 action="#{versaoBean.alterar}">
+					</p:commandButton>
+				<p:commandButton value="Excluir" update="form"
+					action="#{versaoBean.excluir}" > 
+					<p:confirm header="Confirmação"
+						message="Confirma a exclusão da função selecionada?"
+						icon="ui-icon-alert" />
+				</p:commandButton>
+				<p:commandButton value="Fechar" update="panel"
+					action="home.xhtml" />
+			</p:panel>
+			<p:dataTable  id="TBversao" var="versao" 
+				value="#{versaoBean.listarVersoes}"  paginator="true" rows="5"
+				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+				rowsPerPageTemplate="5,10,15"
+				selection="#{versaoBean.versaoSelecionada}" selectionMode="single"
+				rowKey="#{versao.codigo}">
+				<f:facet name="header">
+           	 		Versões Carros
+        		</f:facet>
+
+				<p:column width="8" style="text-align: center;">
+					<f:facet name="header">
+						<h:outputText value="Codigo" />
+					</f:facet>
+					<h:outputText value="#{versao.codigo}" />
+				</p:column>
+				
+				<p:column width="8" style="text-align: center;">
+					<f:facet name="header">
+						<h:outputText value="Fabricante" />
+					</f:facet>
+					<h:outputText value="#{versao.modeloCarro.marcaCarro.fabricante.pj.nome}" />
+				</p:column>
+				
+				<p:column width="8" style="text-align: center;">
+					<f:facet name="header">
+						<h:outputText value="Marca" />
+					</f:facet>
+					<h:outputText value="#{versao.modeloCarro.marcaCarro.descricao}" />
+				</p:column>				
+				<p:column width="8" style="text-align: center;">
+					<f:facet name="header">
+						<h:outputText value="Modelo" />
+					</f:facet>
+					<h:outputText 
+						value="#{versao.modeloCarro.descricao} #{versao.modeloCarro.ano}"/>
+				</p:column>
+				<p:column width="8" style="text-align: center;">
+					<f:facet name="header">
+						<h:outputText value="Valor Modelo" />
+					</f:facet>
+					<h:outputText 
+						value="#{versao.modeloCarro.valor}"/>
+				</p:column>
+				<p:column width="8" style="text-align: center;">
+					<f:facet name="header">
+						<h:outputText value="Descrição" />
+					</f:facet>
+					<h:outputText value="#{versao.descricao}" />
+				</p:column>
+
+
+				<p:column width="5" style="text-align: center;">
+					<f:facet name="header">
+						<h:outputText value="Itens Série" />
+					</f:facet>
+					<h:outputText value="#{versao.itens}" />
+				</p:column>
+				
+				
+				<p:column width="5" style="text-align: center;">
+					<f:facet name="header">
+						<h:outputText value="Acessórios" />
+					</f:facet>
+					<h:outputText value="#{versao.acessorios}" />
+				</p:column>
+				
+				<p:column width="5" style="text-align: center;">
+					<f:facet name="header">
+						<h:outputText value="Valor versão" />
+					</f:facet>
+					<h:outputText value="#{versao.valor}" />
+				</p:column>
+
+				<p:column width="5" style="text-align: center;">
+					<f:facet name="header">
+						<h:outputText value="Situação" />
+					</f:facet>
+					<h:outputText value="#{versao.situacao}" />
+				</p:column>
+
+				<p:column width="5" style="text-align: center;">
+					<f:facet name="header">
+						<h:outputText value="Data da Atualização" />
+					</f:facet>
+					<h:outputText value="#{versao.dataUltimaAtualizacao.time}">
+						<f:convertDateTime pattern="dd/MM/yyyy HH:MM"></f:convertDateTime>
+					</h:outputText>
+				</p:column> 
+			</p:dataTable>
+
+		</h:form>
+	</f:view>
+</h:body>
+</ui:define>
+</ui:composition>
+</html>

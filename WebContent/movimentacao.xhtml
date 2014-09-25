@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html 
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+>
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+	<title>DistCar 1.0 - Movimentação</title>
+	<h:outputStylesheet name="styles-PSC.css" library="css"></h:outputStylesheet>
+</h:head>
+
+<ui:composition template="templates/template-geral.xhtml">
+<ui:define name="principal">
+				
+<h:body onload="#{movimentacaoBean.exibirMensagemPendente}">
+		
+	<f:view id="viewMovimentacao">
+		
+		<h:form id="frmMensagens">
+			<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"></p:messages>
+			<p:growl id="growl" showDetail="true" sticky="false" globalOnly="true" />
+			
+		</h:form>
+		
+  		<h:form id="frmPrincipal">
+  			<p:confirmDialog id="dlgMsg" global="true" showEffect="fade" hideEffect="explode">  
+        		<p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"/>  
+        		<p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>       
+    		</p:confirmDialog>
+  		
+  			<p:panel id="panel" header="DistCar - Movimentação">
+  				<h:panelGrid columns="2" cellpadding="5">
+  					<h:outputLabel for="numero" value="Número: "/>
+  					<h:inputText id="numero" value="#{movimentacaoBean.movimentacaoParaPesquisa.numero}" lable="Número"/>
+  					
+  					<h:outputLabel for="cbxTipoMovimentacao" value="Tipo de movimentação: "/>
+  					<p:selectOneMenu id="cbxTipoMovimentacao" 
+  							value="#{movimentacaoBean.movimentacaoParaPesquisa.tipoMovimentacao}" >
+  						<f:selectItem itemLabel="Todos os tipos de movimentação" itemValue="" />
+  						<f:selectItems value="#{movimentacaoBean.tiposDeMovimentacoes}" />
+  					</p:selectOneMenu>
+  					
+  					<h:outputLabel for="cbxCentroOrigem" value="Centro de origem: "/>
+  					<p:selectOneMenu id="cbxCentroOrigem" converter="CentroConverter"
+  							value="#{movimentacaoBean.movimentacaoParaPesquisa.ctoOrigem}">
+  						<f:selectItem itemLabel="Todos os centros" itemValue="-1" />
+  						<f:selectItems value="#{movimentacaoBean.centrosPesquisa}" var="centro" 
+  									itemLabel="#{centro}" itemValue="#{centro}"/>
+  					</p:selectOneMenu>
+  					
+  					<h:outputLabel for="cbxCentroDestino" value="Centro de destino: "/>
+  					<p:selectOneMenu id="cbxCentroDestino" converter="CentroConverter"
+  							value="#{movimentacaoBean.movimentacaoParaPesquisa.ctoDestino}">
+  						<f:selectItem itemLabel="Todos os centros" itemValue="-1" />
+  						<f:selectItems value="#{movimentacaoBean.centrosPesquisa}" var="centro" 
+  									itemLabel="#{centro}" itemValue="#{centro}"/>
+  					</p:selectOneMenu>
+  					
+  					<h:outputLabel for="dataInicial" value="Data inicial: "/>
+  					<p:calendar id="dataInicial" 
+  						value="#{movimentacaoBean.movimentacaoParaPesquisa.dataMovimentacao}"
+  						effect="explode" pattern="dd/MM/yyyy" />
+  					
+  					<h:outputLabel for="dataFinal" value="Data final: "/>
+  					<p:calendar id="dataFinal" 
+  						value="#{movimentacaoBean.dataFinalPesquisa}"
+  						effect="explode" pattern="dd/MM/yyyy" />
+  					
+  					<h:outputLabel for="situacao" value="Situação: "/>
+  					<p:selectOneMenu id="situacao" value="#{movimentacaoBean.movimentacaoParaPesquisa.situacao}" >
+  						<f:selectItem itemLabel="Todas as situações" itemValue="" />
+  						<f:selectItems value="#{movimentacaoBean.situacoes}" />
+  					</p:selectOneMenu>
+  					
+  				</h:panelGrid>
+				
+				<p:commandButton value="Novo"    update="panel" action="#{movimentacaoBean.novo}"/>
+   				<p:commandButton id="btnAlterar" disabled="#{movimentacaoBean.listaEstaVazia}" 
+   						value="Alterar" update="panel" action="#{movimentacaoBean.alterar}" />
+   				<p:commandButton id="btnExcluir" disabled="#{movimentacaoBean.listaEstaVazia}" 
+   						value="Excluir" update="tbLista" actionListener="#{movimentacaoBean.excluir}">
+   					<p:confirm header="Confirmação" 
+   							message="Confirma a exclusão da movimentação selecionada?"
+   							icon="ui-icon-alert" />  
+   				</p:commandButton>
+
+  				<p:commandButton value="Consultar"  update="tbLista,btnAlterar,btnExcluir,btnDetalhe" 
+  						actionListener="#{movimentacaoBean.consultar}"/>
+  				<p:commandButton id="btnDetalhe" disabled="#{movimentacaoBean.listaEstaVazia}" 
+  						value="Detalhes" action="#{movimentacaoBean.visualizar}" />
+  				<p:commandButton value="Limpar"  update="frmPrincipal" actionListener="#{movimentacaoBean.limpar}"/>
+  				
+ 			</p:panel>
+
+  			<p:dataTable id="tbLista" var="movimentacao" value="#{movimentacaoBean.lista}" paginator="true" rows="5"
+  						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks}
+  						{NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15"
+  						selection="#{movimentacaoBean.movimentacaoSelecionada}" selectionMode="single" 
+  						rowKey="#{movimentacao}" resizableColumns="true" liveResize="true"
+  						emptyMessage="Nenhum registro de movimentação encontrado">
+  				<f:facet name="header">Lista de Movimentações</f:facet>
+  				<p:column>
+  					<f:facet name="header"><h:outputText value="Número"/> </f:facet>
+  					<h:outputText value="#{movimentacao.numero}"/>
+  				</p:column>
+  				
+  				<p:column>
+  					<f:facet name="header"><h:outputText value="Data"/> </f:facet>
+  					<h:outputText value="#{movimentacao.dataMovimentacao}">
+  						<f:convertDateTime pattern="dd/MM/yyyy"/>
+  					</h:outputText>
+  				</p:column>
+  				
+  				<p:column>
+  					<f:facet name="header"><h:outputText value="Centro origem"/> </f:facet>
+  					<h:outputText value="#{movimentacao.ctoOrigem.alias}"/>
+  				</p:column>
+  				
+  				<p:column>
+  					<f:facet name="header"><h:outputText value="Centro destino"/> </f:facet>
+  					<h:outputText value="#{movimentacao.ctoDestino.alias}"/>
+  				</p:column>
+  				
+  				<p:column>
+  					<f:facet name="header"><h:outputText value="Situação"/> </f:facet>
+  					<h:outputText value="#{movimentacao.situacao}"/>
+  				</p:column>
+  				
+  				<p:column>
+  					<f:facet name="header"><h:outputText value="Última atualização"/> </f:facet>
+  					<h:outputText value="#{movimentacao.dataUltimaAtualizacao.time}">
+  						<f:convertDateTime pattern="dd/MM/yyyy"/>
+  					</h:outputText>
+  				</p:column>
+  				
+  				<f:facet name="footer">  
+  					
+        		</f:facet> 
+  			</p:dataTable>
+    		
+  		</h:form>
+	</f:view>
+	
+</h:body>
+
+</ui:define>
+</ui:composition>
+
+</html>

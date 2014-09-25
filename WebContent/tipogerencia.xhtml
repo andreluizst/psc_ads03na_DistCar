@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html 
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+>
+
+<h:head><title>Tipo Gerência</title> </h:head>
+<h:outputStylesheet name="styles-PSC.css" library="css"></h:outputStylesheet>
+
+<ui:composition template="templates/template-geral.xhtml">
+<ui:define name="principal">
+
+<h:body onload="#{tipoGerenciaBean.exibirMensagemPendente}">
+	<f:view id="viewTipoGerencia">
+		
+		<h:form id="frmMensagens">
+			<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"></p:messages>
+		</h:form>
+		
+  		<h:form id="frmPrincipal">
+  			<p:confirmDialog id="dlgMsg" global="true" showEffect="fade" hideEffect="explode">  
+        		<p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"/>  
+        		<p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>       
+    		</p:confirmDialog>
+  		
+  			<p:panel id="panelPesquisa" header="DistCar - Tipo Gerência">
+  				<h:panelGrid columns="2" cellpadding="5">
+  					<h:outputLabel for="descricao" value="Descrição: "/>
+  					<h:inputText id="descricao" value="#{tipoGerenciaBean.tipoGerenciaParaPesquisa.descricao}" lable="Descrição"/>
+  					
+  					<h:outputLabel for="valGratificacao" value="Valor da gratificação: "></h:outputLabel>
+  					<p:inputText id="valGratificacao" converterMessage="Digite um número decimal no formato 999.00" 
+  								value="#{tipoGerenciaBean.tipoGerenciaParaPesquisa.valorGratificacao}" dir="rtl" lable="Salário">
+  					</p:inputText>
+  					
+  					<h:outputLabel for="situacao" value="Situação: "/>
+  					<p:selectOneMenu id="situacao" value="#{tipoGerenciaBean.tipoGerenciaParaPesquisa.situacao}" >
+  						<f:selectItem itemLabel="Todas as situações" itemValue="" />
+  						<f:selectItems value="#{tipoGerenciaBean.situacoes}" />
+  					</p:selectOneMenu>
+  					
+  				</h:panelGrid>
+				
+				<p:commandButton value="Novo"    update="panelPesquisa" action="#{tipoGerenciaBean.novo}"/>
+   				<p:commandButton disabled="#{tipoGerenciaBean.listaEstaVazia}" value="Alterar" update="panelPesquisa"
+   						 action="#{tipoGerenciaBean.alterar}" />
+   				<p:commandButton disabled="#{tipoGerenciaBean.listaEstaVazia}" value="Excluir" update="tbLista"
+   						 actionListener="#{tipoGerenciaBean.excluir}">
+   					<p:confirm header="Confirmação" 
+   							message="Confirma a exclusão do tipo de gerência selecionada?"
+   							icon="ui-icon-alert" />  
+   				</p:commandButton>
+
+  				<p:commandButton value="Consultar"  update="frmPrincipal" actionListener="#{tipoGerenciaBean.consultar}"/>
+  				<p:commandButton disabled="#{tipoGerenciaBean.listaEstaVazia}" value="Detalhes" 
+  						update="panelPesquisa" action="#{tipoGerenciaBean.visualizar}" />
+  				<p:commandButton value="Limpar"  update="panelPesquisa" actionListener="#{tipoGerenciaBean.limpar}"/>
+  				
+  			</p:panel>
+
+  			<p:dataTable id="tbLista" var="tipoGerencia" value="#{tipoGerenciaBean.lista}" paginator="true" rows="5"
+  						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks}
+  						{NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15"
+  						selection="#{tipoGerenciaBean.tipoGerenciaSelecionada}" selectionMode="single"
+  						rowKey="#{tipoGerencia}" emptyMessage="Nenhum tipo de gerência foi encontrado">
+  				<f:facet name="header">Lista de Tipos de Gerências</f:facet>
+  				<p:column>
+  					<f:facet name="header"><h:outputText value="Código"/> </f:facet>
+  					<h:outputText value="#{tipoGerencia.codigo}"/>
+  				</p:column>
+  				<p:column>
+  					<f:facet name="header"><h:outputText value="Descrição"/> </f:facet>
+  					<h:outputText value="#{tipoGerencia.descricao}"/>
+  				</p:column>
+  				<p:column>
+  					<f:facet name="header"><h:outputText value="Gratificação"/> </f:facet>
+  					<h:outputText dir="rtl" value="#{tipoGerencia.valorGratificacao}">
+  						<f:convertNumber type="currency" currencyCode="BRL"/>
+  					</h:outputText>
+  				</p:column>
+  				<p:column>
+  					<f:facet name="header"><h:outputText value="Situação"/> </f:facet>
+  					<h:outputText value="#{tipoGerencia.situacao}"/>
+  				</p:column>
+  				<p:column>
+  					<f:facet name="header"><h:outputText value="Última atualização"/> </f:facet>
+  					<h:outputText value="#{tipoGerencia.dataUltimaAtualizacao.time}">
+  						<f:convertDateTime pattern="dd/MM/yyyy"/>
+  					</h:outputText>
+  				</p:column>
+  				
+  				<f:facet name="footer">  
+ 					
+        		</f:facet> 
+  			</p:dataTable>
+    		
+  		</h:form>
+ 	</f:view>
+ 	
+</h:body>
+
+</ui:define>
+</ui:composition>
+
+</html>

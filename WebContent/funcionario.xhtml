@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html 
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+>
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+	<title>DistCar 1.0 - Funcionário</title>
+	<h:outputStylesheet name="styles-PSC.css" library="css"></h:outputStylesheet>
+</h:head>
+
+<ui:composition template="templates/template-geral.xhtml">
+<ui:define name="principal">
+
+<h:body onload="#{funcionarioBean.exibirMensagemPendente}">
+	<f:view id="viewFuncionario">
+		
+		<h:form id="frmMensagens">
+			<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"></p:messages>
+		</h:form>
+		
+  		<h:form id="frmPrincipal">
+  			<p:confirmDialog id="dlgMsg" global="true" showEffect="fade" hideEffect="explode">  
+        		<p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"/>  
+        		<p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>       
+    		</p:confirmDialog>
+  		
+  			<p:panel id="panelPesquisa" header="DistCar - Funcionário">
+  				<h:panelGrid columns="2" cellpadding="5">
+  					<h:outputLabel for="nome" value="Nome: "/>
+  					<h:inputText id="nome" value="#{funcionarioBean.funcionarioParaPesquisa.nome}" lable="Nome"/>
+  					
+  					<h:outputLabel for="cidade" value="Cidade: "/>
+  					<p:inputText id="cidade"  
+  								value="#{funcionarioBean.funcionarioParaPesquisa.endereco.cidade.nome}" lable="Cidade" />
+  								
+  					<h:outputLabel for="txtDepto" value="Departamento: "/>
+  					<p:inputText id="txtDepto"  
+  								value="#{funcionarioBean.funcionarioParaPesquisa.departamento.nome}" lable="Departamento" />
+  								
+  					<h:outputLabel for="txtFuncao" value="Função: "/>
+  					<p:inputText id="txtFuncao"  
+  								value="#{funcionarioBean.funcionarioParaPesquisa.funcao.descricao}" lable="Função" />
+  					
+  					<h:outputLabel for="situacao" value="Situação: "/>
+  					<p:selectOneMenu id="situacao" value="#{funcionarioBean.funcionarioParaPesquisa.situacao}" >
+  						<f:selectItem itemLabel="Todas as situações" itemValue="" />
+  						<f:selectItems value="#{funcionarioBean.situacoes}" />
+  					</p:selectOneMenu>
+  					
+  				</h:panelGrid>
+				
+				<p:commandButton value="Novo"    update="panelPesquisa" action="#{funcionarioBean.novo}"/>
+   				<p:commandButton disabled="#{funcionarioBean.listaEstaVazia}" value="Alterar" 
+   								update="panelPesquisa" action="#{funcionarioBean.alterar}" />
+   				<p:commandButton disabled="#{funcionarioBean.listaEstaVazia}" value="Excluir" 
+   								update="tbLista,panelPesquisa" actionListener="#{funcionarioBean.excluir}">
+   					<p:confirm header="Confirmação" 
+   							message="Confirma a exclusão do funcionário selecionado?"
+   							icon="ui-icon-alert" />  
+   				</p:commandButton>
+
+  				<p:commandButton value="Consultar"  update="frmPrincipal" actionListener="#{funcionarioBean.consultar}"/>
+  				<p:commandButton disabled="#{funcionarioBean.listaEstaVazia}" value="Detalhes" update="panelPesquisa"
+  							 action="#{funcionarioBean.visualizar}" />
+  				<p:commandButton value="Limpar"  update="frmPrincipal" actionListener="#{funcionarioBean.limpar}"/>
+  				
+ 			</p:panel>
+
+  			<p:dataTable id="tbLista" var="funcionario" value="#{funcionarioBean.lista}" paginator="true" rows="5"
+  						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks}
+  						{NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15"
+  						selection="#{funcionarioBean.funcionarioSelecionado}" selectionMode="single" 
+  						rowKey="#{funcionario}" emptyMessage="Nenhum funcionário encontrado">
+  				<f:facet name="header">Lista de Funconários</f:facet>
+  				<p:column>
+  					<f:facet name="header"><h:outputText value="Código"/> </f:facet>
+  					<h:outputText value="#{funcionario.codigo}"/>
+  				</p:column>
+  				
+  				<p:column>
+  					<f:facet name="header"><h:outputText value="Nome"/> </f:facet>
+  					<h:outputText value="#{funcionario.nome}"/>
+  				</p:column>
+  				
+  				<p:column>
+  					<f:facet name="header"><h:outputText value="CPF"/> </f:facet>
+  					<h:outputText value="#{funcionario.cpf}"/>
+  				</p:column>
+  				
+  				<p:column>
+  					<f:facet name="header"><h:outputText value="RG"/> </f:facet>
+  					<h:outputText dir="rtl" value="#{funcionario.rg}"/>
+  				</p:column>
+  				
+  				<p:column>
+  					<f:facet name="header"><h:outputText value="Endereco"/> </f:facet>
+  					<h:outputText value="#{funcionario.endereco}"/>
+  				</p:column>
+  				
+  				<p:column>
+  					<f:facet name="header"><h:outputText value="Função"/> </f:facet>
+  					<h:outputText value="#{funcionario.funcao}"/>
+  				</p:column>
+  				
+  				<p:column>
+  					<f:facet name="header"><h:outputText value="Situação"/> </f:facet>
+  					<h:outputText value="#{funcionario.situacao}"/>
+  				</p:column>
+  				
+  				<p:column>
+  					<f:facet name="header"><h:outputText value="Última atualização"/> </f:facet>
+  					<h:outputText value="#{funcionario.dataUltimaAtualizacao.time}">
+  						<f:convertDateTime pattern="dd/MM/yyyy 'às' HH:mm:ss"/>
+  					</h:outputText>
+  				</p:column>
+  				
+  				<f:facet name="footer">  
+  					
+        		</f:facet> 
+  			</p:dataTable>
+    		
+  		</h:form>
+	</f:view>
+</h:body>
+
+</ui:define>
+</ui:composition>
+
+</html>

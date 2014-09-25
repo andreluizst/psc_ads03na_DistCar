@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html 
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+>
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+	<title>DistCar 1.0 - Cliente</title>
+	<h:outputStylesheet name="styles-PSC.css" library="css"></h:outputStylesheet>
+</h:head>
+
+<ui:composition template="templates/template-geral.xhtml">
+<ui:define name="principal">
+
+<h:body onload="#{clienteBean.exibirMensagemPendente}">
+	<f:view id="viewCliente">
+		
+		<h:form id="frmMensagens">
+			<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"></p:messages>
+			<p:growl id="growl" showDetail="true" sticky="false" globalOnly="true" />
+		</h:form>
+		
+  		<h:form id="frmPrincipal">
+  			<p:confirmDialog id="dlgMsg" global="true" showEffect="fade" hideEffect="explode">  
+        		<p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"/>  
+        		<p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>       
+    		</p:confirmDialog>
+  		
+  			<p:panel id="panelPesquisa" header="DistCar - Cliente">
+  				<h:panelGrid columns="2" cellpadding="5">
+  				
+  					<h:outputLabel for="tipoCliente" value="Tipo de cliente: "/>
+  					<p:selectOneMenu id="tipoCliente" value="#{clienteBean.clienteParaPesquisa.tipoCliente}"
+  								valueChangeListener="#{clienteBean.mudarCpfCnpj}" >
+  						<f:selectItem itemLabel="Todas os tipos" itemValue="#{null}" />
+  						<f:selectItems value="#{clienteBean.tiposCliente}" />
+  						<f:ajax render="panelPesquisa" event="valueChange"/>
+  					</p:selectOneMenu>
+  				
+  					<h:outputLabel for="nome" value="Nome: "/>
+  					<h:inputText id="nome" value="#{clienteBean.nomeParaPesquisa}" lable="Nome"/>
+  					
+  					<h:outputLabel for="cpfOuCnpj" value="#{clienteBean.cpfOuCnpj}: "
+  								rendered="#{clienteBean.cpfOuCnpjVisible}" />
+  					<p:inputMask id="cpfOuCnpj" mask="#{clienteBean.mascaraCpfOuCnpj}" 
+  							validatorMessage="O campo CPF/CNPJ deve conter apeans números!" size="20" 
+  							value="#{clienteBean.cpfCnpjPesquisa}" lable="#{clienteBean.cpfOuCnpj}"
+  							rendered="#{clienteBean.cpfOuCnpjVisible}" >
+  					</p:inputMask>
+  					  							
+  					<h:outputLabel for="unidadeFederativa" value="UF: "/>
+  					<p:selectOneMenu id="unidadeFederativa" value="#{clienteBean.codigoUfPesquisa}" 
+  							valueChangeListener="#{clienteBean.filtrarCidadesPesquisa}">
+  						<f:selectItem noSelectionOption="true" itemLabel="Qualquer UF" itemValue="#{null}" />
+  						<f:selectItems value="#{clienteBean.ufsPesquisa}" var="uf" 
+  								itemLabel="#{uf}" itemValue="#{uf.codigo}" />
+  						<f:ajax render="cbxCidades" event="valueChange"/>
+  					</p:selectOneMenu>
+  					
+  					<h:outputLabel for="cbxCidades" value="Cidade: "/>
+  					<p:selectOneMenu id="cbxCidades" value="#{clienteBean.codigoCidadePesquisa}">
+  						<f:selectItem noSelectionOption="true" itemLabel="Qualquer cidade" itemValue="#{null}" />
+  						<f:selectItems value="#{clienteBean.cidadesPesquisa}" var="cid" 
+  								itemLabel="#{cid.nome}" itemValue="#{cid.codigo}" />
+  					</p:selectOneMenu>
+  					  					
+  					  					
+  					<h:outputLabel for="situacao" value="Situação: "/>
+  					<p:selectOneMenu id="situacao" value="#{clienteBean.clienteParaPesquisa.dadosPessoa.situacao}" >
+  						<f:selectItem itemLabel="Todas as situações" itemValue="" />
+  						<f:selectItems value="#{clienteBean.situacoes}" />
+  					</p:selectOneMenu>
+  					
+  				</h:panelGrid>
+				
+				<p:commandButton value="Novo"    update="panelPesquisa" action="#{clienteBean.novo}"/>
+   				<p:commandButton id="btnAlterar" disabled="#{clienteBean.listaEstaVazia}" value="Alterar" 
+   								update="panelPesquisa" action="#{clienteBean.alterar}" />
+   				<p:commandButton id="btnExcluir" disabled="#{clienteBean.listaEstaVazia}" value="Excluir" 
+   								update="panelPesquisa,tbLista" actionListener="#{clienteBean.excluir}">
+   					<p:confirm header="Confirmação" 
+   							message="Confirma a exclusão do cliente selecionado?"
+   							icon="ui-icon-alert" />  
+   				</p:commandButton>
+
+  				<p:commandButton value="Consultar"  update="tbLista,btnAlterar,btnExcluir,btnDetalhe" 
+  						actionListener="#{clienteBean.consultar}"/>
+  				<p:commandButton id="btnDetalhe" disabled="#{clienteBean.listaEstaVazia}" value="Detalhes"
+  						 update="panelPesquisa" action="#{clienteBean.visualizar}" />
+  				<p:commandButton value="Limpar"  update="frmPrincipal" actionListener="#{clienteBean.limpar}"/>
+  				
+ 			</p:panel>
+
+  			<p:dataTable id="tbLista" var="cliente" value="#{clienteBean.lista}" paginator="true" rows="5"
+  						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks}
+  						{NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15"
+  						selection="#{clienteBean.clienteSelecionado}" selectionMode="single"
+  						rowKey="#{cliente}" emptyMessage="Nenhum cliente encontrado.">
+  				<f:facet name="header">Lista de Clientes</f:facet>
+  				<p:column>
+  					<f:facet name="header"><h:outputText value="Código"/> </f:facet>
+  					<h:outputText value="#{cliente.codigo}"/>
+  				</p:column>
+  				
+  				<p:column>
+  					<f:facet name="header"><h:outputText value="Tipo cliente"/> </f:facet>
+  					<h:outputText value="#{cliente.tipoCliente}"/>
+  				</p:column>
+  				
+  				<p:column>
+  					<f:facet name="header"><h:outputText value="Nome"/> </f:facet>
+  					<h:outputText value="#{cliente.dadosPessoa.nome}"/>
+  				</p:column>
+  				
+  				<p:column>
+  					<f:facet name="header"><h:outputText value="CPF/CNPJ"/> </f:facet>
+  					<h:outputText value="#{cliente.dadosPessoa}"/>
+  				</p:column>
+  				
+  				<p:column>
+  					<f:facet name="header"><h:outputText value="Endereço"/> </f:facet>
+  					<h:outputText value="#{cliente.dadosPessoa.endereco}"/>
+  				</p:column>
+  				
+  				<p:column>
+  					<f:facet name="header"><h:outputText value="Situação"/> </f:facet>
+  					<h:outputText value="#{cliente.dadosPessoa.situacao}"/>
+  				</p:column>
+  				
+  				<p:column>
+  					<f:facet name="header"><h:outputText value="Última atualização"/> </f:facet>
+  					<h:outputText value="#{cliente.dadosPessoa.dataUltimaAtualizacao.time}">
+  						<f:convertDateTime pattern="dd/MM/yyyy"/>
+  					</h:outputText>
+  				</p:column>
+  				
+  				<f:facet name="footer">  
+  					
+        		</f:facet> 
+  			</p:dataTable>
+    		
+  		</h:form>
+	</f:view>
+</h:body>
+
+</ui:define>
+</ui:composition>
+
+</html>

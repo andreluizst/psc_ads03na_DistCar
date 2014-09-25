@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html 
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+>
+
+<h:head><title>Tipo Gerência</title> </h:head>
+<h:outputStylesheet name="styles-PSC.css" library="css"></h:outputStylesheet>
+<body>
+	<f:view id="viewTipoGerenciaProp">
+		
+		<h:form id="frmMensagens">
+			<p:messages id="messages" showDetail="false" autoUpdate="true" closable="true"></p:messages>
+		</h:form>
+		
+  		<h:form id="frmPrincipal">
+  			<p:panel id="panel" header="DistCar - #{tipoGerenciaBean.tituloOperacao}">
+  				<h:panelGrid columns="3" cellpadding="5">
+  					<h:outputLabel for="descricao" value="Descrição: *"/>
+  					<p:inputText id="descricao" value="#{tipoGerenciaBean.tipoGerencia.descricao}" 
+  							readonly="#{tipoGerenciaBean.somenteLeitura}"
+  							required="true" requiredMessage="Informe uma descrição" lable="Descrição"/>
+  					<p:message for="descricao"/>
+  					
+  					<h:outputLabel for="valGratificacao" value="Valor da Gratificação: *"/>
+  					<p:inputText id="valGratificacao" converterMessage="Digite um número decimal no formato 999.00"
+  								validatorMessage="O valor da gratificação deve ser na faixa de 500,00 a 1999,99!" 
+  								value="#{tipoGerenciaBean.tipoGerencia.valorGratificacao}" dir="rtl" 
+  								readonly="#{tipoGerenciaBean.somenteLeitura}"
+  								required="true" requiredMessage="O valor de gratificação de ser informado!"
+  								lable="Valor da gratificação">
+  						<f:validateDoubleRange minimum="500.00" maximum="1999.99"/>
+  						<f:convertNumber minFractionDigits="2"/>
+  					</p:inputText>
+  					<p:message for="valGratificacao"/>
+  					
+  					<h:outputLabel for="situacao" value="Situação: "/>
+  					<p:selectOneMenu id="situacao" value="#{tipoGerenciaBean.tipoGerencia.situacao}"
+  								readonly="#{tipoGerenciaBean.somenteLeitura}"
+  								disabled="#{tipoGerenciaBean.somenteLeitura}" >
+  						<f:selectItem itemLabel="Selecione uma opção" itemValue="" />
+  						<f:selectItems value="#{tipoGerenciaBean.situacoes}" />
+  					</p:selectOneMenu>
+  					
+  				</h:panelGrid>
+
+  				<p:commandButton value="Salvar" rendered="#{!tipoGerenciaBean.somenteLeitura}" 
+  						disabled="#{tipoGerenciaBean.somenteLeitura}" 
+  						update="panel" action="#{tipoGerenciaBean.salvar}"/>
+  				
+  				<p:commandButton value="#{tipoGerenciaBean.textoBotaoFecharOuCancelar}" 
+  								immediate="true" action="#{tipoGerenciaBean.cancelar}" />
+
+  			</p:panel>
+    		
+  		</h:form>
+ 	</f:view>
+</body>
+</html>

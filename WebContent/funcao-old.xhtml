@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html 
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+>
+
+<h:head><title>Função</title> </h:head>
+<h:body>
+	<f:view>
+		
+  		<h:form>
+  		  	 
+  			<fieldset>
+  				<legend>Cadastrar função</legend> <br/>
+  				Descrição: <h:inputText value="#{funcaoBean.funcao.descricao}"></h:inputText> <br/>
+  				<br></br>
+  				Salário: <h:inputText converterMessage="Digite um número decimal no formato 999.00" value="#{funcaoBean.funcao.salario}"></h:inputText> <br/>
+  				<br></br>
+  				<h:commandButton value="Salvar" action="#{funcaoBean.salvar}"></h:commandButton>
+  				<br></br>
+  				<br></br>
+  				<h:messages></h:messages>
+  				<b><i>#{funcaoBean.mensagem}</i></b>
+  			</fieldset>
+  			
+  		</h:form>
+ 	</f:view>
+ 	<br></br>
+ 	<h:dataTable value="#{funcaoBean.funcoes}" var = "funcao" >
+ 		<h:column><h:outputText title="Código" value="#{funcao.codigo}"/></h:column>
+ 		<h:column><h:outputText title="Descrição" value="#{funcao.descricao}"/></h:column>
+ 		<h:column><h:outputText title="Salário" value="#{funcao.salario}"/></h:column>
+ 		<!-- 
+ 		<h:column><h:outputText title="Última Atualização" value="#{funcao.dataUltimaAtualizacao}"/></h:column>
+ 		-->
+ 		<h:column><p:calendar value="#{funcao.dataUltimaAtualizacao.time}" /></h:column>
+ 		<h:column><h:outputText title="Situação" value="#{funcao.situacao}"/></h:column>
+ 	</h:dataTable>
+</h:body>
+</html>

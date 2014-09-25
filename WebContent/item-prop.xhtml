@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html	 xmlns="http://www.w3.org/1999/xhtml"
+	 	 xmlns:h="http://java.sun.com/jsf/html"
+		xmlns:f="http://java.sun.com/jsf/core"
+		xmlns:p="http://primefaces.org/ui"
+		xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+
+<title>Item Série Carro</title>
+<h:outputStylesheet name="styles-PSC.css" library="css"></h:outputStylesheet>
+</h:head>
+<ui:composition template="templates/template-geral.xhtml">
+<ui:define name="principal">
+<h:body>
+<f:view id="View ">
+
+<h:form id="frmMensagens">
+			<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"></p:messages>
+		</h:form>
+
+		<h:form id="form" >
+
+			<p:panel id="panel" header="DistCar - Item Série"
+				style="margin-bottom:10px;">
+				
+				<h:panelGrid columns="2" cellpadding="5">
+
+					<h:outputLabel for="descricao" value="Descricão: *" />
+					<p:inputText id="descricao"
+						value="#{itemSerieBean.itemSerieCarro.descricao}" required="true"
+						label="Descricão" requiredMessage="Descrição: * Campo obrigatório" />
+					
+
+					<h:outputLabel for="valor" value="Valor: *" />
+					<p:inputText id="valor" required="true"
+						converterMessage="Digite um número decimal no formato 999.00"
+						value="#{itemSerieBean.itemSerieCarro.valorItemSerie}"
+						requerid="false" label="Valor" requiredMessage="Valor Obrigatório*"/>
+				
+
+
+					<h:outputLabel for="modelo" value="Modelo: * " />
+					<p:selectOneMenu id="modelo" converter="ModeloCarroConverter"
+						value="#{itemSerieBean.itemSerieCarro.modelo}" required="true" 
+						requiredMessage="Modelo: * Campo obrigatório">
+						<f:selectItem  noSelectionOption="true"
+							itemLabel="Selecione uma opção" itemValue="-1" />
+						<f:selectItems  value="#{itemSerieBean.modelos}" var="m"
+							itemLabel="#{m.descricao} #{m.ano}" itemValue="#{m}" />
+					</p:selectOneMenu>
+				
+					
+					<h:outputLabel for="situacao" value="Situação: "/>
+  					<p:selectOneMenu id="situacao" value="#{itemSerieBean.itemSerieCarro.situacao}" 
+  					required="true" requiredMessage="Situação: * Campo Obrigatório">
+  						<f:selectItem itemLabel="Selecione uma opção" itemValue="" />
+  						<f:selectItems value="#{itemSerieBean.situacoes}" />
+  					</p:selectOneMenu>
+  					
+					
+				</h:panelGrid>
+				<p:commandButton value="Salvar"  update="form" action="#{itemSerieBean.salvar}" />
+   				<p:commandButton value="Cancelar"  immediate="true" action="#{itemSerieBean.cancelar}" />
+</p:panel>
+ 			</h:form>
+ 			</f:view>
+</h:body>
+</ui:define>
+</ui:composition>
+</html>

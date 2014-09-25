@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html 
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+>
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+	<title>DistCar 1.0 - Funcionário</title>
+	<h:outputStylesheet name="styles-PSC.css" library="css"></h:outputStylesheet>
+</h:head>
+<h:body>
+	<f:view id="viewFuncionario-prop">
+		
+		<p:tooltip/>
+				
+		<h:form id="frmMensagens">
+			<p:messages id="messages" showDetail="false" autoUpdate="true" closable="true"></p:messages>
+		</h:form>
+		
+  		<h:form id="frmPrincipal">
+  			<p:panel id="panelProp" header="DistCar - #{funcionarioBean.tituloOperacao}">
+  				<h:panelGrid id="grid" columns="3" cellpadding="5">
+  					<h:outputLabel for="nome" value="Nome: *"/>
+  					<p:inputText id="nome" value="#{funcionarioBean.funcionario.nome}" lable="Nome"
+  							 size="50" readonly="#{funcionarioBean.somenteLeitura}"
+  							 required="true" requiredMessage="Informe o nome do funcionário!" />
+  					<p:message for="nome" display="default" />
+  					
+  					<h:outputLabel for="ctps" value="CTPS: *"/>
+  					<p:inputText id="ctps" value="#{funcionarioBean.funcionario.cpts}" lable="CTPS" size="20"
+  							converterMessage="Digite apenas números no campo CTPS" 
+							readonly="#{funcionarioBean.somenteLeitura}"
+							required="true" requiredMessage="Informe o número da carteira profissional (CTPS)!" />
+					<p:message for="ctps" display="icon" />
+  					
+  					<h:outputLabel for="dataAdimissao" value="Data de admissão: *"/>
+  					<p:calendar id="dataAdimissao" value="#{funcionarioBean.funcionario.dataAdmissao}"
+  						effect="explode" pattern="dd/MM/yyyy" 
+  						readonly="#{funcionarioBean.somenteLeitura}"
+  						required="true" requiredMessage="Informe a data de admissão!" />
+  					<p:message for="dataAdimissao" display="deafult" />
+  					
+  					<h:outputLabel for="dataDemissao" value="Data de demissão: "/>
+  					<p:calendar id="dataDemissao" value="#{funcionarioBean.funcionario.dataDemissao}"
+  						effect="explode" pattern="dd/MM/yyyy"
+  						readonly="#{funcionarioBean.somenteLeitura}" />
+  					<p:message for="dataDemissao" display="deafult" />
+  					
+  					<h:outputLabel for="cpf" value="CPF: *"/>
+  					<p:inputMask id="cpf" mask="999.999.999-99" size="20"
+  							value="#{funcionarioBean.funcionario.cpf}" lable="CPF"
+  							readonly="#{funcionarioBean.somenteLeitura}"
+  							required="true" requiredMessage="Informe o CPF!">
+  					</p:inputMask>
+  					<p:message for="cpf" display="default" />
+  					
+  					<h:outputLabel for="rg" value="RG: *"/>
+  					<p:inputText id="rg" value="#{funcionarioBean.funcionario.rg}" lable="RG" size="20"
+  							converterMessage="Digite apenas números no campo RG" 
+							readonly="#{funcionarioBean.somenteLeitura}"
+							required="true" requiredMessage="Informe o RG!" />
+  					<p:message for="rg" display="default" />
+  					
+  					<h:outputLabel for="orgaoExp" value="Orgão expedidor: *"/>
+  					<p:inputText id="orgaoExp" value="#{funcionarioBean.funcionario.orgaoExpedidor}" lable="Orgão expedidor"
+  							 readonly="#{funcionarioBean.somenteLeitura}"
+  							 required="true" requiredMessage="Informe o orgão expedidor do documento de identidade!" />
+  					<p:message for="orgaoExp" display="default" />
+  					
+  					<h:outputLabel for="data" value="Data de nascimento: *"/>
+  					<p:calendar id="data" value="#{funcionarioBean.funcionario.dataNascimento}"
+  						effect="explode" pattern="dd/MM/yyyy" 
+  						readonly="#{funcionarioBean.somenteLeitura}"
+  						required="true" requiredMessage="Informe a data de nascimento!" />
+  					<p:message for="data" display="deafult" />
+  					
+  					<h:outputLabel for="cbxEscolaridade" value="Escolaridade: *"/>
+  					<p:selectOneMenu id="cbxEscolaridade" converter="EscolaridadeConverter" 
+  							value="#{funcionarioBean.funcionario.escolaridade}" 
+  							readonly="#{funcionarioBean.somenteLeitura}"
+  							required="true" requiredMessage="Informe a escolaridade!"
+  							disabled="#{funcionarioBean.somenteLeitura}" >
+  						<f:selectItem noSelectionOption="true" itemLabel="Selecione uma opção" itemValue="-1" />
+  						<f:selectItems value="#{funcionarioBean.escolaridades}" var="escolaridade" 
+  									itemLabel="#{escolaridade.descricao}" itemValue="#{escolaridade}"/>
+  					</p:selectOneMenu>
+  					<p:message for="cbxEscolaridade" display="default" />
+  					
+					<h:outputLabel for="cbxDepto" value="Departamento: *"/>
+  					<p:selectOneMenu id="cbxDepto" converter="DepartamentoConverter" 
+  							value="#{funcionarioBean.funcionario.departamento}"
+  							readonly="#{funcionarioBean.somenteLeitura}"
+  							required="true" requiredMessage="Informe o departamento."
+  							disabled="#{funcionarioBean.somenteLeitura}" >
+  						<f:selectItem noSelectionOption="true" itemLabel="Selecione um departamento" itemValue="-1" />
+  						<f:selectItems value="#{funcionarioBean.departamentos}" var="depto" 
+  									itemLabel="#{depto.nome}" itemValue="#{depto}"/>
+  					</p:selectOneMenu>
+  					<p:message for="cbxDepto" display="default" />
+  					
+  					<h:outputLabel for="cbxFuncao" value="Função: *"/>
+  					<p:selectOneMenu id="cbxFuncao" converter="FuncaoConverter" 
+  								value="#{funcionarioBean.funcionario.funcao}"
+  								required="true" readonly="#{funcionarioBean.somenteLeitura}"
+  								disabled="#{funcionarioBean.somenteLeitura}" >
+  						<f:selectItem noSelectionOption="true" itemLabel="Selecione uma função" itemValue="-1" />
+  						<f:selectItems value="#{funcionarioBean.funcoes}" var="funcao" 
+  									itemLabel="#{funcao}" itemValue="#{funcao}"/>
+  					</p:selectOneMenu>
+  					<p:message for="cbxFuncao" display="default" />
+  					
+  					<h:outputLabel for="cbxTipoGerencia" value="Tipo de gerência: "/>
+  					<p:selectOneMenu id="cbxTipoGerencia" converter="TipoGerenciaConverter" 
+  								value="#{funcionarioBean.funcionario.tipoGerencia}"
+  								required="false" readonly="#{funcionarioBean.somenteLeitura}"
+  								disabled="#{funcionarioBean.somenteLeitura}" >
+  						<f:selectItem noSelectionOption="true" itemLabel="NENHUM" itemValue="-1" />
+  						<f:selectItems value="#{funcionarioBean.tiposGerencias}" var="tpGerencia" 
+  									itemLabel="#{tpGerencia}" itemValue="#{tpGerencia}"/>
+  					</p:selectOneMenu>
+  					<p:message for="cbxTipoGerencia" display="default" />
+  					
+  					<h:outputLabel for="tipoLog" value="Tipo logradouro: *"/>
+  					<p:selectOneMenu id="tipoLog" converter="TipoLogradouroConverter"
+  									value="#{funcionarioBean.funcionario.endereco.tipoLogradouro}"
+  									readonly="#{funcionarioBean.somenteLeitura}"
+  									required="true" requiredMessage="Informe o tipo do logradouro!"
+  									disabled="#{funcionarioBean.somenteLeitura}" >
+  						<f:selectItem noSelectionOption="true" itemLabel="Selecione uma opção" itemValue="-1" />
+  						<f:selectItems value="#{funcionarioBean.tiposLogradouros}" var="tpLog" 
+  								itemLabel="#{tpLog.descricao}" itemValue="#{tpLog}" />
+  					</p:selectOneMenu>
+  					<p:message for="tipoLog" display="default" />
+  					
+  					<h:outputLabel for="logradouro" value="Logradouro: *"/>
+  					<p:inputText id="logradouro"  
+  								value="#{funcionarioBean.funcionario.endereco.logradouro}" lable="logradouro"
+  								readonly="#{funcionarioBean.somenteLeitura}"
+  								required="true" requiredMessage="Informe o logradouro!" />
+  					<p:message for="logradouro" display="default" />
+  					
+  					<h:outputLabel for="numero" value="Número: *"/>
+  					<p:inputText id="numero"  
+  								value="#{funcionarioBean.funcionario.endereco.numero}" lable="numero"
+  								readonly="#{funcionarioBean.somenteLeitura}"
+  								required="true" requiredMessage="Informe o número do logradouro!" />
+  					<p:message for="numero" display="default" />
+  					
+  					<h:outputLabel for="bairro" value="Bairro: *"/>
+  					<p:inputText id="bairro"  
+  								value="#{funcionarioBean.funcionario.endereco.bairro}" lable="Bairro"
+  								readonly="#{funcionarioBean.somenteLeitura}"
+  								required="true" requiredMessage="Informe o bairro!" />
+  					<p:message for="bairro" display="default" />
+  					
+  					<h:outputLabel for="unidadeFederativa" value="UF: *"/>
+  					<p:selectOneMenu id="unidadeFederativa" converter="UFConverter" 
+  							value="#{funcionarioBean.ufSelecionada}" 
+  							readonly="#{funcionarioBean.somenteLeitura}"
+  							required="true" requiredMessage="Informe a unidade federativa!"
+  							valueChangeListener="#{funcionarioBean.filtrarCidades}"
+  							disabled="#{funcionarioBean.somenteLeitura}" >
+  						<f:selectItem noSelectionOption="true" itemLabel="Selecione uma UF" itemValue="-1" />
+  						<f:selectItems value="#{funcionarioBean.ufs}" var="uf" 
+  								itemLabel="#{uf}" itemValue="#{uf}" />
+  						<f:ajax render="cbxCidades" event="valueChange"/>
+  					</p:selectOneMenu>
+  					<p:message for="unidadeFederativa" display="default" />
+  								
+  					<h:outputLabel for="cbxCidades" value="Cidade: *"/>
+  					<p:selectOneMenu id="cbxCidades" converter="CidadeConverter" 
+  								value="#{funcionarioBean.funcionario.endereco.cidade}"
+								readonly="#{funcionarioBean.somenteLeitura}"
+								required="true" requiredMessage="Informe a cidade!"
+								disabled="#{funcionarioBean.somenteLeitura}" >
+  						<f:selectItem noSelectionOption="true" itemLabel="Selecione uma cidade" itemValue="-1" />
+  						<f:selectItems value="#{funcionarioBean.cidades}" var="cid" 
+  								itemLabel="#{cid}" itemValue="#{cid}" />
+  					</p:selectOneMenu>
+  					<p:message for="cbxCidades" display="default" />
+  					
+  					<h:outputLabel for="cep" value="CEP: *"/>
+  					<p:inputMask id="cep" mask="99999-999" size="12" 
+  							value="#{funcionarioBean.funcionario.endereco.cep}" lable="CEP"
+  							readonly="#{funcionarioBean.somenteLeitura}"
+  							required="true" requiredMessage="Informe o CEP!">
+  					</p:inputMask>
+  					<p:message for="cep" display="default" />
+  					
+  					<h:outputLabel for="email" value="E-mail: "/>
+  					<p:inputText id="email" size="40" 
+  								readonly="#{funcionarioBean.somenteLeitura}"
+  								value="#{funcionarioBean.funcionario.email}" required="false" lable="E-mail" />
+  					<p:message for="email" display="tooltip" />
+  					
+  					<h:outputLabel for="txtTelefone" value="Telefones: "/>
+  					<h:panelGrid id="grdTelefones" columns="1">
+  						<f:facet name="header">
+  							<h:panelGrid columns="3" cellpadding="2">
+  								<p:commandButton actionListener="#{funcionarioBean.adicionarTelefone}"
+  										id="btnNovoTel" icon="ui-icon-plus" 
+  										title="Adicionar telefone" immediate="true" ajax="true"
+  										disabled="#{funcionarioBean.somenteLeitura}">
+  									<f:ajax render="grdTelefones" execute="txtTelefone"/>
+  								</p:commandButton>
+  								<p:commandButton actionListener="#{funcionarioBean.alterarTelefone}" 
+  										id="btnAlterarTel" icon="ui-icon-pencil"
+  										title="alterar telefone selecionado" immediate="true" ajax="true"
+  										disabled="#{funcionarioBean.somenteLeitura}">
+  									<f:ajax render="grdTelefones" execute="txtTelefone"/>
+  								</p:commandButton> 
+  								<p:commandButton actionListener="#{funcionarioBean.excluirTelefone}" 
+  										id="btnExcluirTel" icon="ui-icon-trash" 
+  										title="excluir telefone selecionado" immediate="true" ajax="true"
+  										disabled="#{funcionarioBean.somenteLeitura}">
+  									<f:ajax render="grdTelefones" execute="txtTelefone"/>
+  								</p:commandButton> 
+  							</h:panelGrid>
+  						</f:facet>
+  						<p:inputText id="txtTelefone" size="15" widgetVar="txtTel"  
+  								readonly="#{funcionarioBean.somenteLeitura}"
+  								value="#{funcionarioBean.telefone}"
+  								required="false" lable="Telefones" />
+  						<p:selectOneListbox id="lstbxTelefones" 
+  									value="#{funcionarioBean.telefoneSelecionado}" size="15"
+  									valueChangeListener="#{funcionarioBean.telefonesChange}">
+  							<f:selectItems value="#{funcionarioBean.funcionario.telefones}"/>
+  							<f:ajax event="valueChange" render="txtTelefone"/>
+  						</p:selectOneListbox>
+  					</h:panelGrid>
+  					<p:message for="lstbxTelefones" display="default" />
+  					
+  					<h:outputLabel for="situacao" value="Situação: "/>
+  					<p:selectOneMenu id="situacao" value="#{funcionarioBean.funcionario.situacao}"
+  								readonly="#{funcionarioBean.somenteLeitura}"
+  								disabled="#{funcionarioBean.somenteLeitura}" >
+  						<f:selectItem  itemLabel="Selecione uma situação" itemValue="#{null}" />
+  						<f:selectItems value="#{funcionarioBean.situacoes}" />
+  					</p:selectOneMenu>
+  					<p:message for="situacao" display="tooltip" />
+  					
+  				</h:panelGrid>
+
+  				<p:commandButton value="Salvar" rendered="#{!funcionarioBean.somenteLeitura}" 
+  						disabled="#{funcionarioBean.somenteLeitura}" 
+  						update="grid" action="#{funcionarioBean.salvar}"/>
+  				
+  				<p:commandButton value="#{funcionarioBean.textoBotaoFecharOuCancelar}" 
+  								immediate="true" action="#{funcionarioBean.cancelar}" />
+
+  			</p:panel>
+    		
+  		</h:form>
+ 	</f:view>
+</h:body>
+</html>

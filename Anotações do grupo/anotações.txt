@@ -1,0 +1,68 @@
+01/12/2013
+- André;	Felipe, da dando pau na fachada esse método de versaoExiste. Qdo vc publicar um método na fachada,
+			cria o mesmo no controlador mesmo que não faça nada.
+
+DAOGenerico: Após a alteração de chico na sexta-feira(30/11/2013), ao testar hoje, 01/12/2013 a aplicação
+				começou a apresentar problemas na persistência por isso alterei o DAO. É recomendável usar
+				os métodos inserirSemTratamento, alterarSemTratamento e removerSemTratamento devido ao
+				uso da IoC.
+
+29/11/2013
+- André:	Felipe, precisei alterar a classe versaoCarro, mas vc não precisa fazer nenhuma alteração
+			no sistema devido a isso, pois apenas adicionei atributos @Transient para personalizar
+			o método toString() para facilitar o uso dessa classe na movimentação. Criei um novo método
+			no dao carro pq preciso dele na movimentação.
+
+link legal: http://benignosales.wordpress.com/tag/primefaces/
+
+28/11/2013
+- André:	Felipe, o acesso através de login foi habilitado e o arquivo index.xhtml agora é 
+			a tela de autenticação de usuário e a página principal é home.xhtml. Como vc não está usando
+			o ResourceBundle nas suas classes ManagedBean, terá que alterar os nomes dos arquivos na unha msm.
+
+
+
+
+Ontem, dia 24/10/2013, em sala de aula Francisco pediu para criar uma tela (XHTML) para cadastramento de 
+uma classe básica simples no projeto. A inclusão de função está OK.
+
+Hoje, dia 25/10/2013, Francisco ensinará como listar os objetos recuperados do BD.
+
+Recife, 25/10/2013.
+- André -> Pessoal, não é necessáiro criar um controlador por DAO. Acretito ser melhor ter controladores por
+ funcionalidades afins ou por módulo. 
+ 
+AGENDADO - Skype domingo, dia 27 às 14:00
+André
+	andre.luiz.st@hotmail.com
+	andre.luiz.silvat@gmail.com
+Felipe Carlos
+	fellipecarllos@msn.com
+	fellipecarllos@gmail.com
+José Francisco
+
+André precido de um selecionar fabricante por id, tem como vc realizar ai na sua fachada?
+
+André 10/11/2013 23:24
+	Favor recriarem o banco, pois adicionei uma propriedade na classe básica Pessoa.java.
+	Incluí o método solicitado por Felipe.
+
+André 11/11/2013  23:45
+    Manda um link me ensinando como fazer para ao selecionar um combox ativar o debaixo de acordo com o item selecionado em cima.
+ 	- RES: Felipe, olha no arquivo centro-prop.xhtml, nas TAGs <selectOneMenu> das UFs e das Cidades, e também
+ 			no método filtarCidades da classe CentroBean.java 
+ 			
+ De André 2013-11-12 -> Pessoal, favor recriar o banco,pois tive que mudar a classe Pessoa e atualizar a classe
+ 	Cliente.java. Também corrigi a classe Fabricante que estava com um atribudo MarcaCarro (agora excluido).
+ 	Amanhão finalizarei o CRUD cliente, pois o ClienteBean já está 90% conluído.
+ 	
+ Felipe 17/11/2013: andré vc pegou já este erro: failed to lazily initialize a collection, could not initialize proxy - no Session
+ ocorre quando carrego uma versao para alterar e lá possui uma lista de itens, um exemplo desmcarco um item e mando salvar ao apresenta 
+ o erro.
+ Ve esse site ai: http://blog.camilolopes.com.br/opensessionviewsolucao/
+ 
+ Felipe 03/12/2013
+ André o que vc mechou no DAO agora que minhas atualizaçãoes das tabelas não estão fazendo mais automáticas
+ tenho que clicar no consultar? O que tu muldasse que agora nenhuma classe minha está funcionando o alterar?
+ liga pra min 88447024
+ 

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html 
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+>
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+	<title>DistCar 1.0 - Departamento</title>
+	<h:outputStylesheet name="styles-PSC.css" library="css"></h:outputStylesheet>
+</h:head>
+<h:body>
+	<f:view id="viewDepto-prop">
+		
+		<h:form id="frmMensagens">
+			<p:messages id="messages" showDetail="false" autoUpdate="true" closable="true"></p:messages>
+		</h:form>
+		
+  		<h:form id="frmPrincipal">
+  			<p:panel id="panel" header="DistCar - #{deptoBean.tituloOperacao}">
+  				<h:panelGrid columns="3" cellpadding="5">
+  					<h:outputLabel for="nome" value="Nome: *"/>
+  					<p:inputText id="nome" value="#{deptoBean.departamento.nome}" lable="Nome"
+  							required="true" readonly="#{deptoBean.somenteLeitura}"/>
+  					<p:message for="nome" display="default" />
+  					
+  					<h:outputLabel for="cbxCentro" value="Centro: *"/>
+  					<p:selectOneMenu id="cbxCentro" value="#{deptoBean.codigoCentroSelecionado}"
+  								disabled="#{!deptoBean.temCentros || deptoBean.somenteLeitura}" 
+  								readonly="#{deptoBean.somenteLeitura}"
+  								required="true" requiredMessage="Informe um centro!">
+  						<f:selectItem noSelectionOption="true" itemLabel="Selecione um centro" itemValue="#{null}" />
+  						<f:selectItems value="#{deptoBean.centros}" var="centro" 
+  									itemLabel="#{centro}" itemValue="#{centro.codigo}"/>
+  					</p:selectOneMenu>
+  					<p:message for="cbxCentro" display="default" />
+					
+					<h:outputLabel for="cbxGestor" value="Gestor: "/>
+  					<p:selectOneMenu id="cbxGestor" value="#{deptoBean.codigoGestorSelecionado}"
+  								readonly="#{deptoBean.somenteLeitura}"
+  								disabled="#{!deptoBean.temGestores || deptoBean.somenteLeitura}">
+  						<f:selectItem itemLabel="Selecione um gestor" itemValue="#{null}" />
+  						<f:selectItems value="#{deptoBean.gestores}" var="gestor" 
+  									itemLabel="#{gestor.nome}" itemValue="#{gestor.codigo}"/>
+  					</p:selectOneMenu>
+  					<p:message for="cbxGestor" display="default" />
+  					  					
+  					<h:outputLabel for="cbxDeptoSup" value="Depto/centro (superior): "/>
+  					<p:selectOneMenu id="cbxDeptoSup" value="#{deptoBean.codigoDeptoSuperiorSelecionado}"
+  									readonly="#{deptoBean.somenteLeitura}"
+  									disabled="#{!deptoBean.temDeptosSuperiores || deptoBean.somenteLeitura}">
+  						<f:selectItem itemLabel="Selecione um departamento superior" itemValue="#{null}" />
+  						<f:selectItems value="#{deptoBean.deptosSuperiores}" var="deptoSup" 
+  									itemLabel="#{deptoSup}" itemValue="#{deptoSup.codigo}"/>
+  					</p:selectOneMenu>
+  					<p:message for="cbxDeptoSup" display="default" />
+  					
+  					<h:outputLabel for="situacao" value="Situação: "/>
+  					<p:selectOneMenu id="situacao" value="#{deptoBean.departamento.situacao}"
+  							readonly="#{deptoBean.somenteLeitura}"
+  							disabled="#{deptoBean.somenteLeitura}" >
+  						<f:selectItem noSelectionOption="true" itemLabel="Selecione uma situação" itemValue="" />
+  						<f:selectItems value="#{deptoBean.situacoes}" />
+  					</p:selectOneMenu>
+  					<p:message for="situacao" display="default" />
+  					
+  				</h:panelGrid>
+
+  				<p:commandButton value="Salvar" rendered="#{!deptoBean.somenteLeitura}" 
+  						disabled="#{deptoBean.somenteLeitura}" 
+  						update="panel" action="#{deptoBean.salvar}"/>
+  				
+  				<p:commandButton value="#{deptoBean.textoBotaoFecharOuCancelar}" 
+  								immediate="true" action="#{deptoBean.cancelar}" />
+
+  			</p:panel>
+    		
+  		</h:form>
+ 	</f:view>
+</h:body>
+</html>

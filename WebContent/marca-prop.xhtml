@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html	 xmlns="http://www.w3.org/1999/xhtml"
+	 	 xmlns:h="http://java.sun.com/jsf/html"
+		xmlns:f="http://java.sun.com/jsf/core"
+		xmlns:p="http://primefaces.org/ui"
+		xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+	<title>Marca_Carro</title>
+	<h:outputStylesheet name="styles-PSC.css" library="css"></h:outputStylesheet>
+</h:head>
+<ui:composition template="templates/template-geral.xhtml">
+<ui:define name="principal">
+<h:body>
+	<f:view id="View">
+	<h:form id="frmMensagens">
+			<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"></p:messages>
+
+		</h:form>
+		<h:form id="form">
+
+
+			<p:confirmDialog id="dlgMsg" global="true" showEffect="fade"
+				hideEffect="explode">
+				<p:commandButton value="Sim" type="button"
+					styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+				<p:commandButton value="Não" type="button"
+					styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+			</p:confirmDialog>
+
+			<p:panel id="panel" header="DistCar - Marca"
+				style="margin-bottom:10px;">
+
+				<h:panelGrid columns="2" cellpadding="5">
+
+					<h:outputLabel for="descricao" value="Descricão: *" />
+					<p:inputText id="descricao"
+						value="#{marcaCarroBean.marcaCarro.descricao}"  required="true" 
+						label="Descricão" requiredMessage="Descrição: * Campo Obrigatório" />
+					
+					<h:outputLabel for="fabricante" value="Fabricante * " />
+					<p:selectOneMenu id="fabricante" converter="FabricanteConverter"
+						value="#{marcaCarroBean.marcaCarro.fabricante}" required="true"
+						requiredMessage="Fabricante: * Campo Obrigatório">
+						<f:selectItem noSelectionOption="true"
+							itemLabel="Selecione o fabricante" itemValue="-1"/>
+						<f:selectItems value="#{marcaCarroBean.fabricanteCarros}" var="f"
+							itemLabel="#{f.pj.nome}" itemValue="#{f}" />
+					</p:selectOneMenu>
+					
+					<h:outputLabel for="situacao" value="Situação: "/>
+  					<p:selectOneMenu id="situacao" value="#{marcaCarroBean.marcaCarro.situacao}"
+  					required="true" requiredMessage="Situação: * Campo Obrigatório" >
+  						<f:selectItem itemLabel="Selecione uma opção" itemValue="" />
+  						<f:selectItems value="#{marcaCarroBean.situacoes}" />
+  					</p:selectOneMenu>
+
+				</h:panelGrid> 
+				
+				<p:commandButton value="Salvar"  update="form" action="#{marcaCarroBean.salvar}" />
+   				<p:commandButton value="Cancelar" immediate="true" action="#{marcaCarroBean.cancelar}" />
+			</p:panel>
+ 			</h:form>
+ 			</f:view>
+</h:body>
+</ui:define>
+</ui:composition>
+</html>

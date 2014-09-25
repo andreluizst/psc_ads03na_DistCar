@@ -1,0 +1,19 @@
+@CHARSET "ISO-8859-1";
+body {
+	font-size: 14px; 
+}
+
+.ui-widget, .ui-widget .ui-widget {
+	font-size: 98% !important;
+	font-family: Arial;
+}
+
+.Titulo{
+	left:300px;
+	width:300px;
+	height:40px;
+}
+
+.GridSemBorda{
+	border:none !important;
+}

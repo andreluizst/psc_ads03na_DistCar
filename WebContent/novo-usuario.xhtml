@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+	<title>Distcar 1.0</title>
+	<h:outputStylesheet name="styles-PSC.css" library="css"></h:outputStylesheet>
+</h:head>
+<h:body>
+	<h:form>
+		<p:growl></p:growl>
+		<p:dialog header="DistCar - Distribuidora de Carros -> Novo usuário"
+			widgetVar="dlg" showEffect="slide" width="650" modal="true"
+			visible="true" resizable="false" closable="false" draggable="true">
+			<h:panelGrid columns="2" width="650">
+				<h:outputLabel value="Login:" for="loginNovo"></h:outputLabel>
+				<p:inputText id="loginNovo" value="#{usuarioBean.usuario.login}"
+					tabindex="1" requiredMessage="Preencha o login" required="true"></p:inputText>
+				<h:outputLabel value="Senha:" for="senhaNovo"></h:outputLabel>
+				<p:password id="senhaNovo" value="#{usuarioBean.usuario.senhaAtual}"
+					tabindex="2" requiredMessage="Preencha a senha" required="true"></p:password>
+				<h:outputLabel value="Repita a Senha:" for="senhaRep"></h:outputLabel>
+				<p:password id="senhaRep" value="#{usuarioBean.senhaRepetida}"
+					tabindex="3" requiredMessage="Preencha a senha" required="true"></p:password>
+				<h:outputLabel value="Tipo de usuário:" for="tipo"></h:outputLabel>
+				<p:selectOneRadio value="#{usuarioBean.usuario.tipo}" id="tipo">
+					<f:selectItems value="#{usuarioBean.tiposUsuario}"></f:selectItems>
+				</p:selectOneRadio>
+			</h:panelGrid>
+			
+			<f:facet name="footer">
+				<p:commandButton value="Salvar" ajax="false"
+					action="#{usuarioBean.salvarUsuario}"></p:commandButton>
+			</f:facet>
+		</p:dialog>
+	</h:form>
+</h:body>
+</html>

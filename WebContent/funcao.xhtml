@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html 
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+>
+
+<h:head><title>Função</title> </h:head>
+<h:outputStylesheet name="styles-PSC.css" library="css"></h:outputStylesheet>
+
+<ui:composition template="templates/template-geral.xhtml">
+<ui:define name="principal">
+
+<h:body onload="#{funcaoBean.exibirMensagemPendente}">
+	<f:view id="viewEntrada">
+		
+		<h:form id="frmMensagens">
+			<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"></p:messages>
+			
+			
+		</h:form>
+		
+  		<h:form id="frmFuncao">
+  			
+  			<p:growl id="growl" showDetail="true" sticky="false" globalOnly="true" autoUpdate="true"/>
+  			
+  			<p:confirmDialog id="dlgMsg" global="true" showEffect="fade" hideEffect="explode">  
+        		<p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"/>  
+        		<p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>       
+    		</p:confirmDialog>
+  		
+  			<p:panel id="panelFuncao" header="DistCar - Função">
+  				<h:panelGrid columns="2" cellpadding="5">
+  					<h:outputLabel for="descricao" value="Descrição: "/>
+  					<h:inputText id="descricao" value="#{funcaoBean.funcaoDePesquisa.descricao}" required="false" lable="Descrição"/>
+  					
+  					<h:outputLabel for="salario" value="Salário: "></h:outputLabel>
+  					<p:inputText id="salario" converterMessage="Digite um número decimal no formato 9.999,00" 
+  								value="#{funcaoBean.funcaoDePesquisa.salario}" dir="rtl" lable="Salário">
+  						<f:convertNumber minFractionDigits="2"/>
+  					</p:inputText>
+  					
+  					<h:outputLabel for="situacao" value="Situação: "/>
+  					<p:selectOneMenu id="situacao" value="#{funcaoBean.funcaoDePesquisa.situacao}" >
+  						<f:selectItem itemLabel="Todas as situações" itemValue="" />
+  						<f:selectItems value="#{funcaoBean.situacoes}" />
+  					</p:selectOneMenu>
+  					
+  				</h:panelGrid>
+				
+				<p:commandButton id="btnNovo" value="Novo"    update="dlgMsg,tbFuncoes,panelFuncao" action="#{funcaoBean.novo}"/>
+   				<p:commandButton id="btnAlterar" disabled="#{funcaoBean.listaEstaVazia}" value="Alterar" 
+   						update="frmFuncao" action="#{funcaoBean.alterar}" />
+   				<p:commandButton id="btnExcluir" disabled="#{funcaoBean.listaEstaVazia}" value="Excluir" 
+   						update="tbFuncoes,panelFuncao" actionListener="#{funcaoBean.excluir}">
+   					<p:confirm header="Confirmação" 
+   							message="Confirma a exclusão da função selecionada?"
+   							icon="ui-icon-alert" />  
+   				</p:commandButton>
+
+  				<p:commandButton value="Consultar"  update="frmFuncao" 
+  						actionListener="#{funcaoBean.consultar}"/>
+  				<p:commandButton disabled="#{funcaoBean.listaEstaVazia}" value="Detalhes" update="panelFuncao" action="#{funcaoBean.visualizar}" />
+  				<p:commandButton value="Limpar"  update="frmFuncao" actionListener="#{funcaoBean.limpar}"/>
+  				
+  			</p:panel>
+
+  			<p:dataTable id="tbFuncoes" var="funcao" value="#{funcaoBean.funcoes}" paginator="true" rows="5"
+  						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks}
+  						{NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15"
+  						selection="#{funcaoBean.funcaoSelecionada}" selectionMode="single" rowKey="#{funcao}"
+  						emptyMessage="Nenhuma função encontrada">
+  				<f:facet name="header">Lista de Funções</f:facet>
+  				<p:column>
+  					<f:facet name="header"><h:outputText value="Código"/> </f:facet>
+  					<h:outputText value="#{funcao.codigo}"/>
+  				</p:column>
+  				<p:column>
+  					<f:facet name="header"><h:outputText value="Descrição"/> </f:facet>
+  					<h:outputText value="#{funcao.descricao}"/>
+  				</p:column>
+  				<p:column>
+  					<f:facet name="header"><h:outputText value="Salário"/> </f:facet>
+  					<h:outputText dir="ltr" value="#{funcao.salario}">
+  						<f:convertNumber currencyCode="BRL" type="currency"/>
+  					</h:outputText>
+  				</p:column>
+  				<p:column>
+  					<f:facet name="header"><h:outputText value="Situação"/> </f:facet>
+  					<h:outputText value="#{funcao.situacao}"/>
+  				</p:column>
+  				<p:column>
+  					<f:facet name="header"><h:outputText value="Última atualização"/> </f:facet>
+  					<h:outputText value="#{funcao.dataUltimaAtualizacao.time}">
+  						<f:convertDateTime pattern="dd/MM/yyyy"/>
+  					</h:outputText>
+  				</p:column>
+  				
+  				<f:facet name="footer">  
+  					Rodapé
+        		</f:facet> 
+  			</p:dataTable>
+    		
+  		</h:form>
+ 	</f:view>
+ 	
+</h:body>
+
+</ui:define>
+</ui:composition>
+
+</html>

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html 
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+>
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+	<title>DistCar 1.0 - Cidade</title>
+	<h:outputStylesheet name="styles-PSC.css" library="css"></h:outputStylesheet>
+</h:head>
+
+<ui:composition template="templates/template-geral.xhtml">
+<ui:define name="principal">
+	
+<h:body onload="#{cidadeBean.exibirMensagemPendente}">
+	<f:view id="viewCidade">
+		
+		<h:form id="frmMensagens">
+			<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"></p:messages>
+			<p:growl id="growl" showDetail="true" sticky="false" globalOnly="true" />
+			
+		</h:form>
+		
+  		<h:form id="frmPrincipal">
+  			<p:confirmDialog id="dlgMsg" global="true" showEffect="fade" hideEffect="explode">  
+        		<p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"/>  
+        		<p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>       
+    		</p:confirmDialog>
+  		
+  			<p:panel id="panelPesquisa" header="DistCar - Cidade">
+  				<h:panelGrid columns="2" cellpadding="5">
+  					<h:outputLabel for="nome" value="Nome: "/>
+  					<h:inputText id="nome" value="#{cidadeBean.cidadeParaPesquisa.nome}" lable="Nome"/>
+  					
+  					<h:outputLabel for="unidadeFederativa" value="UF: "/>
+  					<p:selectOneMenu id="unidadeFederativa" value="#{cidadeBean.cidadeParaPesquisa.unidadeFederativa.codigo}">
+  						<f:selectItem itemLabel="Qualquer UF" itemValue="#{null}" />
+  						<f:selectItems value="#{cidadeBean.ufs}" var="uf" 
+  								itemLabel="#{uf}" itemValue="#{uf.codigo}" />
+  					</p:selectOneMenu>
+  					
+  					<h:outputLabel for="situacao" value="Situação: "/>
+  					<p:selectOneMenu id="situacao" value="#{cidadeBean.cidadeParaPesquisa.situacao}" >
+  						<f:selectItem itemLabel="Todas as situações" itemValue="" />
+  						<f:selectItems value="#{cidadeBean.situacoes}" />
+  					</p:selectOneMenu>
+  					
+  				</h:panelGrid>
+				
+				<p:commandButton value="Novo"    update="panelPesquisa" action="#{cidadeBean.novo}"/>
+   				<p:commandButton disabled="#{cidadeBean.listaEstaVazia}" value="Alterar" update="panelPesquisa" action="#{cidadeBean.alterar}" />
+   				<p:commandButton disabled="#{cidadeBean.listaEstaVazia}" value="Excluir" update="tbLista" actionListener="#{cidadeBean.excluir}">
+   					<p:confirm header="Confirmação" 
+   							message="Confirma a exclusão do centro selecionado?"
+   							icon="ui-icon-alert" />  
+   				</p:commandButton>
+
+  				<p:commandButton value="Consultar"  update="frmPrincipal" actionListener="#{cidadeBean.consultar}"/>
+  				<p:commandButton disabled="#{cidadeBean.listaEstaVazia}" value="Detalhes" update="panelPesquisa"
+  							 action="#{cidadeBean.visualizar}" />
+  				<p:commandButton value="Limpar"  update="frmPrincipal" actionListener="#{cidadeBean.limpar}"/>
+  				
+ 			</p:panel>
+
+  			<p:dataTable id="tbLista" var="cidade" value="#{cidadeBean.lista}" paginator="true" rows="5"
+  						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks}
+  						{NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15"
+  						selection="#{cidadeBean.cidadeSelecionada}" selectionMode="single" rowKey="#{cidade}"
+  						emptyMessage="Nenhuma cidade encontrada">
+  				<f:facet name="header">Lista de Cidades</f:facet>
+  				<p:column>
+  					<f:facet name="header"><h:outputText value="Código"/> </f:facet>
+  					<h:outputText value="#{cidade.codigo}"/>
+  				</p:column>
+  				
+  				<p:column>
+  					<f:facet name="header"><h:outputText value="Nome"/> </f:facet>
+  					<h:outputText value="#{cidade.nome}"/>
+  				</p:column>
+  				
+  				<p:column>
+  					<f:facet name="header"><h:outputText value="UF"/> </f:facet>
+  					<h:outputText value="#{cidade.unidadeFederativa}"/>
+  				</p:column>
+  				
+  				<p:column>
+  					<f:facet name="header"><h:outputText value="Situação"/> </f:facet>
+  					<h:outputText value="#{cidade.situacao}"/>
+  				</p:column>
+  				
+  				<p:column>
+  					<f:facet name="header"><h:outputText value="Última atualização"/> </f:facet>
+  					<h:outputText value="#{cidade.dataUltimaAtualizacao.time}">
+  						<f:convertDateTime pattern="dd/MM/yyyy"/>
+  					</h:outputText>
+  				</p:column>
+  				
+  				<f:facet name="footer">  
+  					
+        		</f:facet> 
+  			</p:dataTable>
+    		
+  		</h:form>
+	</f:view>
+</h:body>
+
+</ui:define>
+</ui:composition>
+
+</html>

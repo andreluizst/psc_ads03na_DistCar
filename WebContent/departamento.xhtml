@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html 
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+>
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+	<title>DistCar 1.0 - Departamento</title>
+	<h:outputStylesheet name="styles-PSC.css" library="css"></h:outputStylesheet>
+</h:head>
+	
+<ui:composition template="templates/template-geral.xhtml">
+<ui:define name="principal">
+	
+<h:body onload="#{deptoBean.exibirMensagemPendente}">
+	<f:view id="viewDepto">
+		
+		<h:form id="frmMensagens">
+			<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"></p:messages>
+			<p:growl id="growl" showDetail="true" sticky="false" globalOnly="true" />
+			
+		</h:form>
+		
+  		<h:form id="frmPrincipal">
+  			<p:confirmDialog id="dlgMsg" global="true" showEffect="fade" hideEffect="explode">  
+        		<p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"/>  
+        		<p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>       
+    		</p:confirmDialog>
+  		
+  			<p:panel id="panelPesquisa" header="DistCar - Departamento">
+  				<h:panelGrid columns="2" cellpadding="5">
+  					<h:outputLabel for="nome" value="Nome: "/>
+  					<h:inputText id="nome" value="#{deptoBean.departamentoParaPesquisa.nome}" lable="Nome"/>
+  					
+  					<h:outputLabel for="cbxDeptoSup" value="Depto/centro (superior): "/>
+  					<p:selectOneMenu id="cbxDeptoSup" converter="DepartamentoConverter"
+  							value="#{deptoBean.departamentoParaPesquisa.departamentoSuperior}">
+  						<f:selectItem itemLabel="Todos os departamentos" itemValue="-1" />
+  						<f:selectItems value="#{deptoBean.deptosSuperiores}" var="deptoSup" 
+  									itemLabel="#{deptoSup}" itemValue="#{deptoSup}"/>
+  					</p:selectOneMenu>
+  					
+  					<h:outputLabel for="situacao" value="Situação: "/>
+  					<p:selectOneMenu id="situacao" value="#{deptoBean.departamentoParaPesquisa.situacao}" >
+  						<f:selectItem itemLabel="Todas as situações" itemValue="" />
+  						<f:selectItems value="#{deptoBean.situacoes}" />
+  					</p:selectOneMenu>
+  					
+  				</h:panelGrid>
+				
+				<p:commandButton value="Novo"    update="panelPesquisa" action="#{deptoBean.novo}"/>
+   				<p:commandButton disabled="#{deptoBean.listaEstaVazia}" value="Alterar" update="panelPesquisa" action="#{deptoBean.alterar}" />
+   				<p:commandButton disabled="#{deptoBean.listaEstaVazia}" value="Excluir" update="tbLista" actionListener="#{deptoBean.excluir}">
+   					<p:confirm header="Confirmação" 
+   							message="Confirma a exclusão do centro selecionado?"
+   							icon="ui-icon-alert" />  
+   				</p:commandButton>
+
+  				<p:commandButton value="Consultar"  update="frmPrincipal" actionListener="#{deptoBean.consultar}"/>
+  				<p:commandButton disabled="#{deptoBean.listaEstaVazia}" value="Detalhes" update="panelPesquisa" action="#{deptoBean.visualizar}" />
+  				<p:commandButton value="Limpar"  update="frmPrincipal" actionListener="#{deptoBean.limpar}"/>
+  				
+ 			</p:panel>
+
+  			<p:dataTable id="tbLista" var="depto" value="#{deptoBean.lista}" paginator="true" rows="5"
+  						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks}
+  						{NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15"
+  						selection="#{deptoBean.departamentoSelecionado}" selectionMode="single" rowKey="#{depto}"
+  						emptyMessage="Nenhum departamento encontrada">
+  				<f:facet name="header">Lista de Centros</f:facet>
+  				<p:column>
+  					<f:facet name="header"><h:outputText value="Código"/> </f:facet>
+  					<h:outputText value="#{depto.codigo}"/>
+  				</p:column>
+  				
+  				<p:column>
+  					<f:facet name="header"><h:outputText value="Nome"/> </f:facet>
+  					<h:outputText value="#{depto.nome}"/>
+  				</p:column>
+  				
+  				<p:column>
+  					<f:facet name="header"><h:outputText value="Centro"/> </f:facet>
+  					<h:outputText value="#{depto.centro}"/>
+  				</p:column>
+  				
+  				<p:column>
+  					<f:facet name="header"><h:outputText value="Gestor"/> </f:facet>
+  					<h:outputText value="#{depto.gestor.nome}"/>
+  				</p:column>
+  				
+				<p:column>
+  					<f:facet name="header"><h:outputText value="Depto/centro (superior)"/> </f:facet>
+  					<h:outputText value="#{depto.departamentoSuperior}"/>
+  				</p:column>  				
+  				
+  				<p:column>
+  					<f:facet name="header"><h:outputText value="Situação"/> </f:facet>
+  					<h:outputText value="#{depto.situacao}"/>
+  				</p:column>
+  				
+  				<p:column>
+  					<f:facet name="header"><h:outputText value="Última atualização"/> </f:facet>
+  					<h:outputText value="#{depto.dataUltimaAtualizacao.time}">
+  						<f:convertDateTime type="both" timeStyle="short"  />
+  					</h:outputText>
+  				</p:column>
+  				
+  				<f:facet name="footer">  
+  					
+        		</f:facet> 
+  			</p:dataTable>
+    		
+  		</h:form>
+	</f:view>
+</h:body>
+
+</ui:define>
+</ui:composition>
+
+</html>

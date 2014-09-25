@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+	<title>Marca_Carro</title>
+	<h:outputStylesheet name="styles-PSC.css" library="css"></h:outputStylesheet>
+</h:head>
+<ui:composition template="templates/template-geral.xhtml">
+<ui:define name="principal">
+<h:body>
+	<f:view id="View">
+	<h:form id="frmMensagens">
+			<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"></p:messages>
+		</h:form>
+		<h:form id="form">
+
+		
+
+			<p:confirmDialog id="dlgMsg" global="true" showEffect="fade"
+				hideEffect="explode">
+				<p:commandButton value="Sim" type="button"
+					styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+				<p:commandButton value="Não" type="button"
+					styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+			</p:confirmDialog>
+
+			<p:panel id="panel" header="DistCar - Marca"
+				style="margin-bottom:10px;">
+
+				<h:panelGrid columns="2" cellpadding="5">
+
+					<h:outputLabel for="descricao" value="Descricão: *" />
+					<p:inputText id="descricao"
+						value="#{marcaCarroBean.marcaCarro.descricao}" 
+						label="Descricão"/>
+
+					<h:outputLabel for="fabricante" value="Fabricante * " />
+					<p:selectOneMenu id="fabricante" converter="FabricanteConverter"
+						value="#{marcaCarroBean.marcaCarro.fabricante}">
+						<f:selectItem noSelectionOption="true"
+							itemLabel="Selecione o fabricante" itemValue="-1"/>
+						<f:selectItems value="#{marcaCarroBean.fabricanteCarros}" var="f"
+							itemLabel="#{f.pj.nome}" itemValue="#{f}" />
+					</p:selectOneMenu>
+
+					
+					<h:outputLabel for="situacao" value="Situação: "/>
+  					<p:selectOneMenu id="situacao" value="#{marcaCarroBean.marcaCarro.situacao}" >
+  						<f:selectItem itemLabel="Selecione uma opção" itemValue="" />
+  						<f:selectItems value="#{marcaCarroBean.situacoes}" />
+  					</p:selectOneMenu>
+					
+				</h:panelGrid> 
+
+			<p:commandButton value="Consultar" update="form"
+					action="#{marcaCarroBean.consultar}" />	
+				
+				<p:commandButton value="Novo" update="form" immediate="true"
+					action="#{marcaCarroBean.novo}" />
+				<p:commandButton value="Alterar" update="form"
+					action="#{marcaCarroBean.alterar}"  />
+				<p:commandButton value="Excluir" update="form"
+					action="#{marcaCarroBean.excluir}" >
+					<p:confirm header="Confirmação"
+						message="Confirma a exclusão da função selecionada?"
+						icon="ui-icon-alert" />
+				</p:commandButton>
+				<p:commandButton value="Fechar" update="panel"
+					action="home.xhtml" />
+			</p:panel>
+			<p:dataTable  id="TBMarca" var="marca" 
+				value="#{marcaCarroBean.listaMarcasCarros}"  paginator="true" rows="5"
+				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+				rowsPerPageTemplate="5,10,15"
+				selection="#{marcaCarroBean.marcaSelecionada}" selectionMode="single"
+				rowKey="#{marca}">
+				<f:facet name="header">
+           	 		Marcas Carros
+        		</f:facet>
+
+				<p:column width="8" style="text-align: center;">
+					<f:facet name="header">
+						<h:outputText value="Codigo" />
+					</f:facet>
+					<h:outputText value="#{marca.codigo}" />
+				</p:column>
+				
+				<p:column width="8" style="text-align: center;">
+					<f:facet name="header">
+						<h:outputText value="Fabricantes" />
+					</f:facet>
+					<h:outputText 
+						value="#{marca.fabricante.pj.nome}"/>
+				</p:column>
+				
+				<p:column width="8" style="text-align: center;">
+					<f:facet name="header">
+						<h:outputText value="Marcas" />
+					</f:facet>
+					<h:outputText value="#{marca.descricao}" />
+				</p:column>
+
+				<p:column width="5" style="text-align: center;">
+					<f:facet name="header">
+						<h:outputText value="Situação" />
+					</f:facet>
+					<h:outputText value="#{marca.situacao}" />
+				</p:column>
+
+				<p:column width="5" style="text-align: center;">
+					<f:facet name="header">
+						<h:outputText value="Data da Atualização" />
+					</f:facet>
+					<h:outputText value="#{marca.dataUltimaAtualizacao.time}">
+						<f:convertDateTime pattern="dd/MM/yyyy HH:MM"></f:convertDateTime>
+					</h:outputText>
+				</p:column> 
+			</p:dataTable>
+
+		</h:form>
+	</f:view>
+</h:body>
+</ui:define>
+</ui:composition>
+</html>

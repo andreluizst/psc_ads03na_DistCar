@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html 
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+>
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+	<title>DistCar 1.0 - Centro</title>
+	<h:outputStylesheet name="styles-PSC.css" library="css"></h:outputStylesheet>
+</h:head>
+<h:body>
+	<f:view id="viewCentro-prop">
+		
+		<h:form id="frmMensagens">
+			<p:messages id="messages" showDetail="false" autoUpdate="true" closable="true"></p:messages>
+		</h:form>
+		
+  		<h:form id="frmPrincipla">
+  			<p:panel id="panel" header="DistCar - #{centroBean.tituloOperacao}">
+  				<h:panelGrid columns="2" cellpadding="5">
+  					<h:outputLabel for="alias" value="Alias: *"/>
+  					<p:inputText id="alias" value="#{centroBean.centro.alias}" lable="Alias"
+  								readonly="#{centroBean.somenteLeitura}"
+  								required="true" requiredMessage="Um alias é obrigatório!" />
+  					
+  					<h:outputLabel for="nome" value="Nome/Razão social: *"/>
+  					<p:inputText id="nome" value="#{centroBean.centro.dadosPJ.nome}" lable="Nome"
+  							readonly="#{centroBean.somenteLeitura}"
+  							required="true" requiredMessage="O nome é obrigatório!" />
+  					
+  					<h:outputLabel for="cnpj" value="CNPJ: *"/>
+  					<p:inputMask id="cnpj" mask="99.999.999/9999-99" size="20" 
+  							value="#{centroBean.centro.dadosPJ.cnpj}" lable="CNPJ"
+  							readonly="#{centroBean.somenteLeitura}"
+  							required="true" requiredMessage="O preenchimento do campo CNPJ é obrigatório!" >
+  					</p:inputMask>
+  					
+					<h:outputLabel for="tipoCentro" value="Tipo centro: *"/>
+  					<p:selectOneMenu id="tipoCentro" value="#{centroBean.centro.tipoCentro}"
+  							readonly="#{centroBean.somenteLeitura}"
+  							disabled="#{centroBean.somenteLeitura}" 
+							required="true" requiredMessage="Informe o tipo do centro!">
+  						<f:selectItem noSelectionOption="true" itemLabel="Selecione uma situação" itemValue="" />
+  						<f:selectItems value="#{centroBean.tiposCentros}" />
+  					</p:selectOneMenu>
+  					
+  					<h:outputLabel for="capacidade" value="Capacidade: *"/>
+  					<p:inputText id="capacidade"  
+  								value="#{centroBean.centro.capacidadeArmazenamento}" lable="capacidade"
+  								readonly="#{centroBean.somenteLeitura}"
+  								required="true" requiredMessage="Informe a capacidade de armazenamento do centro!" />
+  					
+  					<h:outputLabel for="data" value="Data da abertura: "/>
+  					<p:calendar id="data" value="#{centroBean.centro.dadosPJ.dataAbertura}"
+  						effect="explode" pattern="dd/MM/yyyy"
+  						readonly="#{centroBean.somenteLeitura}" />
+  					
+  					<h:outputLabel for="inscEst" value="Inscrição estadual: *"/>
+  					<p:inputText id="inscEst" value="#{centroBean.centro.dadosPJ.inscricaoEstadual}"
+  								lable="Inscrição estadual" readonly="#{centroBean.somenteLeitura}"
+  								required="true" requiredMessage="Informe a inscrição estadual. se não tiver digite: ISENTO"/>
+  					
+  					
+  					<h:outputLabel for="tipoLog" value="Tipo logradouro: *"/>
+  					<p:selectOneMenu id="tipoLog" value="#{centroBean.tipoLogradouroSelecionado}"
+  									readonly="#{centroBean.somenteLeitura}"
+  									disabled="#{centroBean.somenteLeitura}"
+  									required="true" requiredMessage="Informe o tipo do logradouro!" >
+  						<f:selectItem noSelectionOption="true" itemLabel="Selecione uma opção"  itemValue="#{null}"/>
+  						<f:selectItems value="#{centroBean.tiposLogradouros}" var="tpLog" 
+  								itemLabel="#{tpLog.descricao}" itemValue="#{tpLog.codigo}" />
+  					</p:selectOneMenu>
+  					
+  					<h:outputLabel for="logradouro" value="Logradouro: *"/>
+  					<p:inputText id="logradouro"  
+  								value="#{centroBean.centro.dadosPJ.endereco.logradouro}" lable="logradouro"
+  								readonly="#{centroBean.somenteLeitura}"
+  								required="true" requiredMessage="Informe um logradouro!" />
+  					
+  					<h:outputLabel for="numero" value="Número: *"/>
+  					<p:inputText id="numero"  
+  								value="#{centroBean.centro.dadosPJ.endereco.numero}" lable="numero"
+  								readonly="#{centroBean.somenteLeitura}"
+  								required="true" requiredMessage="Informe o número do logradouro!" />
+  					
+  					<h:outputLabel for="bairro" value="Bairro: *"/>
+  					<p:inputText id="bairro"  
+  								value="#{centroBean.centro.dadosPJ.endereco.bairro}" lable="Bairro"
+  								readonly="#{centroBean.somenteLeitura}"
+  								required="true" requiredMessage="Informe o bairro!" />
+  				
+  					 
+  					<h:outputLabel for="unidadeFederativa" value="UF: *"/>
+  					<p:selectOneMenu id="unidadeFederativa" value="#{centroBean.ufSelecionada}"
+  							readonly="#{centroBean.somenteLeitura}" 
+  							disabled="#{centroBean.somenteLeitura}"
+  							required="true" requiredMessage="Informe a unidade federativa!"
+  							valueChangeListener="#{centroBean.filtrarCidades}">
+  						<f:selectItem noSelectionOption="true" itemLabel="Selecione uma UF" itemValue="#{null}" />
+  						<f:selectItems value="#{centroBean.ufs}" var="uf" 
+  								itemLabel="#{uf}" itemValue="#{uf.codigo}" />
+  						<f:ajax render="cbxCidades" event="valueChange"/>
+  					</p:selectOneMenu>
+  					
+  				
+  					<h:outputLabel for="cbxCidades" value="Cidade: *"/>
+  					<p:selectOneMenu id="cbxCidades" value="#{centroBean.cidadeSelecionada}"
+  								readonly="#{centroBean.somenteLeitura}"
+  								disabled="#{centroBean.somenteLeitura}"
+  								required="true" requiredMessage="Informe uma cidade!">
+  						<f:selectItem noSelectionOption="true" itemLabel="Selecione uma cidade" itemValue="#{null}" />
+  						<f:selectItems value="#{centroBean.cidades}" var="cid" 
+  								itemLabel="#{cid}" itemValue="#{cid.codigo}" />
+  					</p:selectOneMenu>
+  					
+  					<h:outputLabel for="cep" value="CEP: *"/>
+  					<p:inputMask id="cep" mask="99999-999" size="12" 
+  							value="#{centroBean.centro.dadosPJ.endereco.cep}" lable="CEP"
+  							readonly="#{centroBean.somenteLeitura}"
+  							required="true" requiredMessage="Informe o CEP!">
+  					</p:inputMask>
+  					
+  					<h:outputLabel for="email" value="E-mail: "/>
+  					<p:inputText id="email"  
+  								readonly="#{centroBean.somenteLeitura}"
+  								value="#{centroBean.centro.dadosPJ.email}" required="false" lable="E-mail" />
+  					
+  					<h:outputLabel for="situacao" value="Situação: "/>
+  					<p:selectOneMenu id="situacao" value="#{centroBean.centro.situacao}"
+  								readonly="#{centroBean.somenteLeitura}"
+  								disabled="#{centroBean.somenteLeitura}" >
+  						<f:selectItem noSelectionOption="true" itemLabel="Selecione uma situação" itemValue="" />
+  						<f:selectItems value="#{centroBean.situacoes}" />
+  					</p:selectOneMenu>
+  					
+  				</h:panelGrid>
+
+  				<p:commandButton value="Salvar" rendered="#{!centroBean.somenteLeitura}" 
+  						disabled="#{centroBean.somenteLeitura}" 
+  						update="panel" action="#{centroBean.salvar}"/>
+  				
+  				<p:commandButton value="#{centroBean.textoBotaoFecharOuCancelar}" 
+  								immediate="true" action="#{centroBean.cancelar}" />
+
+  			</p:panel>
+    		
+  		</h:form>
+ 	</f:view>
+</h:body>
+</html>

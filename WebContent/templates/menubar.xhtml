@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:fragment xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+		<h:form>  
+    		<p:megaMenu autoDisplay="false" widgetVar="menu">
+    			<p:menuitem value="Início" icon="ui-icon-home" action="home.xhtml?faces-redirect=true"/>  
+        		<p:submenu label="Cadastro" icon="ui-icon-contact">  
+            		<p:column>  
+                		<p:submenu label="Organizacional">  
+                    		<p:menuitem value="Função" action="#{funcaoBean.carregarPagina}" />  
+	                	    <p:menuitem value="Funcionário" action="#{funcionarioBean.carregarPagina}" />
+                		    <p:menuitem value="Escolaridade" action="#{escolaridadeBean.carregarPagina}" />
+                		    <p:menuitem value="Cidades" action="#{cidadeBean.carregarPagina}" />
+            		        <p:menuitem value="Tipo gerencia" action="#{tipoGerenciaBean.carregarPagina}" />
+        		            <p:menuitem value="Centro" action="#{centroBean.carregarPagina}" />
+		                    <p:menuitem value="Departamento" action="#{deptoBean.carregarPagina}" />
+                		</p:submenu>
+                		  
+            	    	<p:submenu label="Vendas">
+        	        		<p:menuitem value="Fabricante" action="#{fabricanteBean.carregarPagina}" />
+        	        		<p:menuitem value="Marca" action="marca.xhtml?faces-redirect=true" />  
+    	            		<p:menuitem value="Cliente" action="#{clienteBean.carregarPagina}" />  
+	                    	<p:menuitem value="Carro" action="carro.xhtml?faces-redirect=true" />  
+                    		<p:menuitem value="Modelo" action="modelo.xhtml?faces-redirect=true" />
+                    		<p:menuitem value="Versão" action="versao.xhtml?faces-redirect=true" />  
+                	    	<p:menuitem value="Acessórios" action="acessorio.xhtml?faces-redirect=true" />
+            	        	<p:menuitem value="Itens de série" action="item.xhtml?faces-redirect=true" />  
+        	        	</p:submenu>  
+	            	</p:column>  
+    		    </p:submenu>  
+  	
+		        <p:submenu label="Movimentação" icon="ui-icon-transferthick-e-w">  
+    	        	<p:column>  
+	                	<p:submenu label="Movimentação">  
+                    		<p:menuitem value="Entre lojas" action="#{movimentacaoBean.carregarPagina}" />  
+                    		<p:menuitem value="Pedido de venda" url="#" />
+                	    	<p:menuitem value="Nota fiscal de saída" url="#" />  
+            	    	</p:submenu>  
+        	    	</p:column>  
+    	    	</p:submenu>  
+  
+    	    	<p:menuitem value="Sair" icon="ui-icon-close" action="#{loginBean.efetuarLogoff}"/>  
+	    	</p:megaMenu>  
+  
+		</h:form>
+		
+</ui:fragment>

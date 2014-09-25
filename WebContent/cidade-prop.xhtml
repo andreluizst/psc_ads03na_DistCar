@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html 
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+>
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+	<title>DistCar 1.0 - Cidade</title>
+	<h:outputStylesheet name="styles-PSC.css" library="css"></h:outputStylesheet>
+</h:head>
+<h:body>
+	<f:view id="viewCidade-prop">
+		
+		<h:form id="frmMensagens">
+			<p:messages id="messages" showDetail="false" autoUpdate="true" closable="true"></p:messages>
+		</h:form>
+		
+  		<h:form id="frmPrincial">
+  			<p:panel id="panel" header="DistCar - #{cidadeBean.tituloOperacao}">
+  				<h:panelGrid columns="2" cellpadding="5">
+  					<h:outputLabel for="nome" value="Nome: *"/>
+  					<p:inputText id="nome" value="#{cidadeBean.cidade.nome}" lable="Nome"
+  								readonly="#{cidadeBean.somenteLeitura}" size="40"
+  								required="true" requiredMessage="Informe o nome da cidade!"/>
+  					
+  					<h:outputLabel for="unidadeFederativa" value="UF: *"/>
+  					<p:selectOneMenu id="unidadeFederativa" value="#{cidadeBean.codigoUfSelecionada}"
+  								readonly="#{cidadeBean.somenteLeitura}" size="40"
+  								disabled="#{cidadeBean.somenteLeitura}"
+  								required="true" requiredMessage="Informe uma unidade federativa!">
+  						<f:selectItem noSelectionOption="true" itemLabel="Selecione uma UF" itemValue="#{null}" />
+  						<f:selectItems value="#{cidadeBean.ufs}" var="uf" 
+  								itemLabel="#{uf}" itemValue="#{uf.codigo}" />
+  					</p:selectOneMenu>
+  					
+  					<h:outputLabel for="situacao" value="Situação: "/>
+  					<p:selectOneMenu id="situacao" value="#{cidadeBean.cidade.situacao}" 
+  								readonly="#{cidadeBean.somenteLeitura}"
+  								disabled="#{cidadeBean.somenteLeitura}" >
+  						<f:selectItem itemLabel="Selecione uma situação" itemValue="" />
+  						<f:selectItems value="#{cidadeBean.situacoes}" />
+  					</p:selectOneMenu>
+  					
+  				</h:panelGrid>
+
+  				<p:commandButton value="Salvar" rendered="#{!cidadeBean.somenteLeitura}" 
+  						disabled="#{cidadeBean.somenteLeitura}" 
+  						update="frmPrincial" action="#{cidadeBean.salvar}"/>
+  				
+  				<p:commandButton value="#{cidadeBean.textoBotaoFecharOuCancelar}" 
+  								immediate="true" action="#{cidadeBean.cancelar}" />
+
+  			</p:panel>
+    		
+  		</h:form>
+ 	</f:view>
+</h:body>
+</html>

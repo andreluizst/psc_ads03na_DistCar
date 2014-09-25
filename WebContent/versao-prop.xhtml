@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html	 xmlns="http://www.w3.org/1999/xhtml"
+	 	 xmlns:h="http://java.sun.com/jsf/html"
+		xmlns:f="http://java.sun.com/jsf/core"
+		xmlns:p="http://primefaces.org/ui"
+		xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+	<title>Versão_Carro</title>
+	<h:outputStylesheet name="styles-PSC.css" library="css"></h:outputStylesheet>
+</h:head>
+<ui:composition template="templates/template-geral.xhtml">
+<ui:define name="principal">
+<h:body>
+	<f:view id="View">
+	<h:form id="frmMensagens" >
+			<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"></p:messages>
+	
+		</h:form>
+		<h:form id="form">
+
+	
+			<p:confirmDialog id="dlgMsg" global="true" showEffect="fade"
+				hideEffect="explode">
+				<p:commandButton value="Sim" type="button"
+					styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+				<p:commandButton value="Não" type="button"
+					styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+			</p:confirmDialog>
+
+			<p:panel id="panel" header="DistCar - Versão Carro"
+				style="margin-bottom:10px;">
+
+				<h:panelGrid columns="2" cellpadding="5">
+
+				
+					<h:outputLabel for="descricao" value="Descricão: *" />
+					<p:inputText id="descricao"
+						value="#{versaoBean.versaoCarro.descricao}"  required="true"
+						label="Descricão" requiredMessage="Descricação: obrigatório: *" />
+
+				
+
+					<h:outputLabel for="fabricante" value="Fabricante: * " />
+					<p:selectOneMenu id="fabricante" converter="FabricanteConverter"
+						 valueChangeListener="#{versaoBean.filtrarMarca}" required="true"
+						 requiredMessage="Fabricante: obrigatório: *" 
+						 value="#{versaoBean.versaoCarro.modeloCarro.marcaCarro.fabricante}"> 
+						<f:selectItem noSelectionOption="true"
+							itemLabel="Selecione o fabricante" itemValue="-1"/>
+						<f:selectItems value="#{versaoBean.fabricantes}" var="f"
+							itemLabel="#{f.pj.nome}" itemValue="#{f}" />
+							<f:ajax render="marca modelo itens acessorio valor" event="valueChange"/>
+  					</p:selectOneMenu>
+  	
+  					
+  					<h:outputLabel for="marca" value="Marca: * " />
+					<p:selectOneMenu id="marca" converter="MarcaConverter" required="true"
+						 valueChangeListener="#{versaoBean.filtrarModelo}" requiredMessage="Marca: obrigatório: *" 
+						 value="#{versaoBean.versaoCarro.modeloCarro.marcaCarro}" >
+						<f:selectItem noSelectionOption="true"
+							itemLabel="Selecione a marca" itemValue="-1"/>
+						<f:selectItems value="#{versaoBean.marcas}" var="m"
+							itemLabel="#{m.descricao}" itemValue="#{m}" />
+							<f:ajax render="modelo itens acessorio valor" event="valueChange"/>
+  					</p:selectOneMenu>
+  	
+
+					<h:outputLabel for="modelo" value="Modelo: * " />
+					<p:selectOneMenu id="modelo" converter="ModeloCarroConverter" 
+					required="true" requiredMessage="Modelo obrigatório: *" 
+						value="#{versaoBean.versaoCarro.modeloCarro}"  valueChangeListener="#{versaoBean.filtrarItens}">
+						<f:selectItem noSelectionOption="true"
+							itemLabel="Selecione o Modelo" itemValue="-1"/>
+						<f:selectItems value="#{versaoBean.modelos}" var="m"
+							itemLabel="#{m.descricao} #{m.ano}" itemValue="#{m}" />
+							<f:ajax render="itens acessorio valor" event="valueChange"/>
+					</p:selectOneMenu>
+					
+							
+					<h:outputLabel for="valor" value="Valor Modelo: *" />
+					<p:inputText id="valor" disabled="true"
+						converterMessage="Digite um número decimal no formato 999.00"
+						value="#{versaoBean.versaoCarro.valor}"
+						label="Valor"/>
+
+					<h:outputLabel for="situacao" value="Situação: *" />
+  					<p:selectOneMenu id="situacao" value="#{versaoBean.versaoCarro.situacao}" 
+  					required="true" requiredMessage="Situação obrigatório: *" >
+  						<f:selectItem itemLabel="Selecione uma opção" itemValue="" />
+  						<f:selectItems value="#{versaoBean.situacoes}" />
+  					</p:selectOneMenu>
+				</h:panelGrid> 
+				 <h:panelGrid columns="4" style="margin-bottom:10px" cellpadding="5">  
+				<h:outputText value="Itens: *"/>  
+        				<p:selectManyCheckbox id="itens" converter="ItensConverter"
+        				 value="#{versaoBean.versaoCarro.itens}" layout="pageDirection" columns="1">  
+           				    <f:selectItems value="#{versaoBean.itens}" var="i" 
+           				      itemLabel="#{i.descricao}" itemValue="#{i}"/> 
+           				     <f:ajax render="valorItens valorAcessorios valor"  event="click" 
+           				     		listener="#{versaoBean.somar}"/> 
+       					</p:selectManyCheckbox>
+       					
+						<h:outputText value="Acessório: *"  />  
+        				<p:selectManyCheckbox id="acessorio" converter="AcessoriosConverter" 
+        						value="#{versaoBean.versaoCarro.acessorios}" layout="pageDirection" 
+        						columns="2">  
+           				    <f:selectItems value="#{versaoBean.acessorios}" var="a"
+           				    		itemLabel="#{a.descricao}" itemValue="#{a}"/>
+           				     <f:ajax render="valorAcessorios valor"  event="click" 
+           				     		listener="#{versaoBean.somar}"/>
+       					</p:selectManyCheckbox>
+
+       				<h:inputHidden id="valorItens" value="#{versaoBean.valorItens}" />
+					<h:inputHidden id="valorAcessorios" value="#{versaoBean.valorAcessorios}" />
+					</h:panelGrid>
+				<p:commandButton value="Salvar"  update="form" action="#{versaoBean.salvar}" />
+   				<p:commandButton value="Cancelar" update="form" immediate="true" action="#{versaoBean.cancelar}" />
+</p:panel>
+ 			</h:form>
+ 			</f:view>
+</h:body>
+</ui:define>
+</ui:composition>
+</html>

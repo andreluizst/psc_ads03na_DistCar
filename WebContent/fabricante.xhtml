@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html 
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+>
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+	<title>DistCar 1.0 - Fabricante</title>
+	<h:outputStylesheet name="styles-PSC.css" library="css"></h:outputStylesheet>
+</h:head>
+
+<ui:composition template="templates/template-geral.xhtml">
+<ui:define name="principal">
+
+<h:body onload="#{fabricanteBean.exibirMensagemPendente}">
+	<f:view id="viewFabricante">
+		
+		<h:form id="frmMensagens">
+			<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"></p:messages>
+			<p:growl id="growl" showDetail="true" sticky="false" globalOnly="true" />
+			
+		</h:form>
+		
+  		<h:form id="frmPrincipal">
+  			<p:confirmDialog id="dlgMsg" global="true" showEffect="fade" hideEffect="explode">  
+        		<p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"/>  
+        		<p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>       
+    		</p:confirmDialog>
+  		
+  			<p:panel id="panelfabricante" header="DistCar - Fabricante">
+  				<h:panelGrid columns="2" cellpadding="5">
+  					<h:outputLabel for="alias" value="Nome: "/>
+  					<h:inputText id="alias" value="#{fabricanteBean.fabricanteParaPesquisa.pj.nome}" lable="Nome"/>
+  					
+  					<h:outputLabel for="unidadeFederativa" value="UF: "/>
+  					<p:selectOneMenu id="unidadeFederativa" converter="UFConverter" 
+  								value="#{fabricanteBean.ufPesquisa}" 
+  								valueChangeListener="#{fabricanteBean.filtrarCidadesPesquisa}">
+  						<f:selectItem noSelectionOption="true" itemLabel="Qualquer UF" itemValue="-1" />
+  						<f:selectItems value="#{fabricanteBean.ufsPesquisa}" var="uf" 
+  								itemLabel="#{uf}" itemValue="#{uf}" />
+  						<f:ajax render="cbxCidades" event="valueChange"/>
+  					</p:selectOneMenu>
+  					
+  					<h:outputLabel for="cbxCidades" value="Cidade: "/>
+  					<p:selectOneMenu id="cbxCidades" converter="CidadeConverter" 
+  								value="#{fabricanteBean.fabricanteParaPesquisa.pj.endereco.cidade}">
+  						<f:selectItem noSelectionOption="true" itemLabel="Qualquer cidade" itemValue="-1" />
+  						<f:selectItems value="#{fabricanteBean.cidadesPesquisa}" var="cid" 
+  								itemLabel="#{cid.nome}" itemValue="#{cid}" />
+  					</p:selectOneMenu>
+  					
+  					<h:outputLabel for="situacao" value="Situação: "/>
+  					<p:selectOneMenu id="situacao" value="#{fabricanteBean.fabricanteParaPesquisa.pj.situacao}" >
+  						<f:selectItem itemLabel="Todas as situações" itemValue="" />
+  						<f:selectItems value="#{fabricanteBean.situacoes}" />
+  					</p:selectOneMenu>
+  					
+  				</h:panelGrid>
+				
+				<p:commandButton value="Novo"    update="panelfabricante" action="#{fabricanteBean.novo}"/>
+   				<p:commandButton id="btnAlterar" disabled="#{fabricanteBean.listaEstaVazia}" 
+   						value="Alterar" update="tbLista" action="#{fabricanteBean.alterar}" />
+   				<p:commandButton id="btnExcluir" disabled="#{fabricanteBean.listaEstaVazia}" 
+   						value="Excluir" update="frmPrincipal"
+   						actionListener="#{fabricanteBean.excluir}">
+   					<p:confirm header="Confirmação" 
+   							message="Confirma a exclusão do fabricante selecionado?"
+   							icon="ui-icon-alert" />  
+   				</p:commandButton>
+
+  				<p:commandButton value="Consultar"  update="tbLista,btnAlterar,btnExcluir,btnDetalhe" 
+  						actionListener="#{fabricanteBean.consultar}"/>
+  				<p:commandButton id="btnDetalhe" disabled="#{fabricanteBean.listaEstaVazia}" 
+  						value="Detalhes" update="panelfabricante" action="#{fabricanteBean.visualizar}" />
+  				<p:commandButton value="Limpar"  update="frmPrincipal" actionListener="#{fabricanteBean.limpar}"/>
+  				
+ 			</p:panel>
+
+  			<p:dataTable id="tbLista" var="fabricante" value="#{fabricanteBean.lista}" paginator="true" rows="5"
+  						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks}
+  						{NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15"
+  						selection="#{fabricanteBean.fabricanteSelecionado}" selectionMode="single" 
+  						rowKey="#{fabricante}" emptyMessage="Nenhum fabricante encontrado">
+  				<f:facet name="header">Lista de Fabricantes</f:facet>
+  				<p:column>
+  					<f:facet name="header"><h:outputText value="Código"/> </f:facet>
+  					<h:outputText value="#{fabricante.codigo}"/>
+  				</p:column>
+  				
+  				<p:column>
+  					<f:facet name="header"><h:outputText value="Nome"/> </f:facet>
+  					<h:outputText value="#{fabricante.pj.nome}"/>
+  				</p:column>
+  				
+  				<p:column>
+  					<f:facet name="header"><h:outputText value="Lote mínimo"/> </f:facet>
+  					<h:outputText dir="rtl" value="#{fabricante.loteMinimo}"/>
+  				</p:column>
+  				
+  				<p:column>
+  					<f:facet name="header"><h:outputText value="Endereco"/> </f:facet>
+  					<h:outputText dir="rtl" value="#{fabricante.pj.endereco}"/>
+  				</p:column>
+  				
+  				<p:column>
+  					<f:facet name="header"><h:outputText value="CNPJ"/> </f:facet>
+  					<h:outputText value="#{fabricante.pj.cnpj}"/>
+  				</p:column>
+  				
+  				<p:column>
+  					<f:facet name="header"><h:outputText value="Situação"/> </f:facet>
+  					<h:outputText value="#{fabricante.pj.situacao}"/>
+  				</p:column>
+  				
+  				<p:column>
+  					<f:facet name="header"><h:outputText value="Última atualização"/> </f:facet>
+  					<h:outputText value="#{fabricante.pj.dataUltimaAtualizacao.time}">
+  						<f:convertDateTime pattern="dd/MM/yyyy"/>
+  					</h:outputText>
+  				</p:column>
+  				
+  				<f:facet name="footer">  
+  				
+        		</f:facet> 
+  			</p:dataTable>
+    		
+  		</h:form>
+	</f:view>
+</h:body>
+
+</ui:define>
+</ui:composition>
+
+</html>

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html 
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+>
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+	<title>DistCar 1.0 - Centro</title>
+	<h:outputStylesheet name="styles-PSC.css" library="css"></h:outputStylesheet>
+</h:head>
+
+<ui:composition template="templates/template-geral.xhtml">
+<ui:define name="principal">
+				
+<h:body onload="#{centroBean.exibirMensagemPendente}">
+		
+	<f:view id="viewCentro">
+		
+		<h:form id="frmMensagens">
+			<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"></p:messages>
+			<p:growl id="growl" showDetail="true" sticky="false" globalOnly="true" />
+			
+		</h:form>
+		
+  		<h:form id="frmCentro">
+  			<p:confirmDialog id="dlgMsg" global="true" showEffect="fade" hideEffect="explode">  
+        		<p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"/>  
+        		<p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>       
+    		</p:confirmDialog>
+  		
+  			<p:panel id="panelCentro" header="DistCar - Centro">
+  				<h:panelGrid columns="2" cellpadding="5">
+  					<h:outputLabel for="alias" value="Alias: "/>
+  					<h:inputText id="alias" value="#{centroBean.centroParaPesquisa.alias}" lable="Alias"/>
+  					
+  					<h:outputLabel for="cidade" value="Cidade: "/>
+  					<p:inputText id="cidade"  
+  								value="#{centroBean.centroParaPesquisa.dadosPJ.endereco.cidade.nome}" lable="Cidade" />
+  					
+  					<h:outputLabel for="situacao" value="Situação: "/>
+  					<p:selectOneMenu id="situacao" value="#{centroBean.centroParaPesquisa.situacao}" >
+  						<f:selectItem itemLabel="Todas as situações" itemValue="" />
+  						<f:selectItems value="#{centroBean.situacoes}" />
+  					</p:selectOneMenu>
+  					
+  				</h:panelGrid>
+				
+				<p:commandButton value="Novo"    update="panelCentro" action="#{centroBean.novo}"/>
+   				<p:commandButton id="btnAlterar" disabled="#{centroBean.listaEstaVazia}" 
+   						value="Alterar" update="panelCentro" action="#{centroBean.alterar}" />
+   				<p:commandButton id="btnExcluir" disabled="#{centroBean.listaEstaVazia}" 
+   						value="Excluir" update="tbCentros" actionListener="#{centroBean.excluir}">
+   					<p:confirm header="Confirmação" 
+   							message="Confirma a exclusão do centro selecionado?"
+   							icon="ui-icon-alert" />  
+   				</p:commandButton>
+
+  				<p:commandButton value="Consultar"  update="tbCentros,btnAlterar,btnExcluir,btnDetalhe" 
+  						actionListener="#{centroBean.consultar}"/>
+  				<p:commandButton id="btnDetalhe" disabled="#{centroBean.listaEstaVazia}" 
+  						value="Detalhes" update="panelCentro" action="#{centroBean.visualizar}" />
+  				<p:commandButton value="Limpar"  update="frmCentro" actionListener="#{centroBean.limpar}"/>
+  				
+ 			</p:panel>
+
+  			<p:dataTable id="tbCentros" var="centro" value="#{centroBean.lista}" paginator="true" rows="5"
+  						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks}
+  						{NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15"
+  						selection="#{centroBean.centroSelecionado}" selectionMode="single" rowKey="#{centro}"
+  						emptyMessage="Nenhum centro encontrado">
+  				<f:facet name="header">Lista de Centros</f:facet>
+  				<p:column>
+  					<f:facet name="header"><h:outputText value="Código"/> </f:facet>
+  					<h:outputText value="#{centro.codigo}"/>
+  				</p:column>
+  				
+  				<p:column>
+  					<f:facet name="header"><h:outputText value="Alias"/> </f:facet>
+  					<h:outputText value="#{centro.alias}"/>
+  				</p:column>
+  				
+  				<p:column>
+  					<f:facet name="header"><h:outputText value="Tipo"/> </f:facet>
+  					<h:outputText value="#{centro.tipoCentro}"/>
+  				</p:column>
+  				
+  				<p:column>
+  					<f:facet name="header"><h:outputText value="Capacidade"/> </f:facet>
+  					<h:outputText dir="rtl" value="#{centro.capacidadeArmazenamento}"/>
+  				</p:column>
+  				
+  				<p:column>
+  					<f:facet name="header"><h:outputText value="Endereco"/> </f:facet>
+  					<h:outputText dir="rtl" value="#{centro.dadosPJ.endereco}"/>
+  				</p:column>
+  				
+  				<p:column>
+  					<f:facet name="header"><h:outputText value="CNPJ"/> </f:facet>
+  					<h:outputText value="#{centro.dadosPJ.cnpj}"/>
+  				</p:column>
+  				
+  				<p:column>
+  					<f:facet name="header"><h:outputText value="Situação"/> </f:facet>
+  					<h:outputText value="#{centro.situacao}"/>
+  				</p:column>
+  				
+  				<p:column>
+  					<f:facet name="header"><h:outputText value="Última atualização"/> </f:facet>
+  					<h:outputText value="#{centro.dataUltimaAtualizacao.time}">
+  						<f:convertDateTime pattern="dd/MM/yyyy"/>
+  					</h:outputText>
+  				</p:column>
+  				
+  				<f:facet name="footer">  
+  					Rodapé
+        		</f:facet> 
+  			</p:dataTable>
+    		
+  		</h:form>
+	</f:view>
+	
+</h:body>
+
+</ui:define>
+</ui:composition>
+
+</html>

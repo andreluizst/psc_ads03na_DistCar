@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+	
+<h:head>
+	<title>Acessórios Carro</title>
+	<h:outputStylesheet name="styles-PSC.css" library="css"></h:outputStylesheet>
+</h:head>
+<ui:composition template="templates/template-geral.xhtml">
+<ui:define name="principal">
+
+<h:body>
+	<f:view id="View">
+	<h:form id="frmMensagens">
+			<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"></p:messages>
+		</h:form>
+		<h:form id="form">
+
+			<p:growl id="messages" showDetail="true" />
+
+			<p:confirmDialog id="dlgMsg" global="true" showEffect="fade"
+				hideEffect="explode">
+				<p:commandButton value="Sim" type="button"
+					styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+				<p:commandButton value="Não" type="button"
+					styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+			</p:confirmDialog>
+
+			<p:panel id="panel" header="DistCar - Acessório"
+				style="margin-bottom:10px;">
+
+				<h:panelGrid columns="3" cellpadding="5">
+
+					<h:outputLabel for="descricao" value="Descricão: *" />
+					<p:inputText id="descricao"
+						value="#{acessorioBean.acessorioCarro.descricao}"  required="false"
+						label="Descricão" requiredMessage="Nome obrigatório: *" />
+					<p:message for="descricao" />
+						
+					<h:outputLabel for="valor" value="Valor: *" />
+					<p:inputText id="valor" required="false"
+						converterMessage="Digite um número decimal no formato 999.00"
+						value="#{acessorioBean.acessorioCarro.valor}"
+						requerid="false" label="Valor" />
+					<p:message for="valor" />
+
+						<h:outputLabel for="modelo" value="Modelo * " />
+					<p:selectOneMenu id="modelo" converter="ModeloCarroConverter"
+						value="#{acessorioBean.acessorioCarro.modelo}" >
+						<f:selectItem noSelectionOption="true"
+							itemLabel="Selecione o Modelo" itemValue="-1"/>
+						<f:selectItems value="#{acessorioBean.modelos}" var="m"
+							itemLabel="#{m.descricao} #{m.ano}" itemValue="#{m}" />
+					</p:selectOneMenu>
+					<p:message for="modelo" />
+					
+					<h:outputLabel for="situacao" value="Situação: "/>
+  					<p:selectOneMenu id="situacao" value="#{acessorioBean.acessorioCarro.situacao}" >
+  						<f:selectItem itemLabel="Selecione uma opção" itemValue="" />
+  						<f:selectItems value="#{acessorioBean.situacoes}" />
+  					</p:selectOneMenu>
+					<p:message for="situacao" />
+				</h:panelGrid> 
+				
+				
+			<p:commandButton value="Consultar" update="form"
+					action="#{acessorioBean.consultar}" />	
+				
+				<p:commandButton value="Novo" update="form" immediate="true"
+					action="#{acessorioBean.novo}" />
+				<p:commandButton value="Alterar" update="form"
+					action="#{acessorioBean.alterar}"  />
+				<p:commandButton value="Excluir" update="form"
+					action="#{acessorioBean.excluir}" >
+					<p:confirm header="Confirmação"
+						message="Confirma a exclusão da função selecionada?"
+						icon="ui-icon-alert" />
+				</p:commandButton>
+				<p:commandButton value="Fechar" update="form"
+					action="home.xhtml" />
+			</p:panel>
+			<p:dataTable  id="TBacessorio" var="acessorio" 
+				value="#{acessorioBean.listaAcessorios}"  paginator="true" rows="5"
+				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+				rowsPerPageTemplate="5,10,15"
+				selection="#{acessorioBean.acessorioSelecionado}" selectionMode="single"
+				rowKey="#{acessorio.codigo}">
+				<f:facet name="header">
+           	 		Acessórios Carros
+        		</f:facet>
+
+				<p:column width="8" style="text-align: center;">
+					<f:facet name="header">
+						<h:outputText value="Codigo" />
+					</f:facet>
+					<h:outputText value="#{acessorio.codigo}" />
+				</p:column>
+				<p:column width="8" style="text-align: center;">
+					<f:facet name="header">
+						<h:outputText value="Descrição" />
+					</f:facet>
+					<h:outputText value="#{acessorio.descricao}" />
+				</p:column>
+
+				<p:column width="8" style="text-align: center;">
+					<f:facet name="header">
+						<h:outputText value="Modelo" />
+					</f:facet>
+					<h:outputText 
+						value="#{acessorio.modelo.descricao} #{acessorio.modelo.ano}"/>
+				</p:column>
+
+				<p:column width="5" style="text-align: center;">
+					<f:facet name="header">
+						<h:outputText value="Valor" />
+					</f:facet>
+					<h:outputText value="#{acessorio.valor}" />
+				</p:column>
+
+				<p:column width="5" style="text-align: center;">
+					<f:facet name="header">
+						<h:outputText value="Situação" />
+					</f:facet>
+					<h:outputText value="#{acessorio.situacao}" />
+				</p:column>
+
+				<p:column width="5" style="text-align: center;">
+					<f:facet name="header">
+						<h:outputText value="Data da Atualização" />
+					</f:facet>
+					<h:outputText value="#{acessorio.dataUltimaAtualizacao.time}">
+						<f:convertDateTime pattern="dd/MM/yyyy HH:MM"></f:convertDateTime>
+					</h:outputText>
+				</p:column> 
+			</p:dataTable>
+
+		</h:form>
+	</f:view>
+</h:body>
+</ui:define>
+</ui:composition>
+</html>

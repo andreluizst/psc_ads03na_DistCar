@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html 
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+>
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+	<title>DistCar 1.0 - Escolaridade</title>
+	<h:outputStylesheet name="styles-PSC.css" library="css"></h:outputStylesheet>
+</h:head>
+
+<ui:composition template="templates/template-geral.xhtml">
+<ui:define name="principal">
+
+<h:body onload="#{escolaridadeBean.exibirMensagemPendente}">
+	<f:view id="viewEscolaridade">
+		
+		<h:form id="frmMensagens">
+			<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true"></p:messages>
+			<p:growl id="growl" showDetail="true" sticky="false" globalOnly="true" />
+			
+		</h:form>
+		
+  		<h:form id="frmPrincipal">
+  			<p:confirmDialog id="dlgMsg" global="true" showEffect="fade" hideEffect="explode">  
+        		<p:commandButton value="Sim" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check"/>  
+        		<p:commandButton value="Não" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"/>       
+    		</p:confirmDialog>
+  		
+  			<p:panel id="panelPesquisa" header="DistCar - Escolaridade">
+  				<h:panelGrid columns="2" cellpadding="5">
+  					<h:outputLabel for="descricao" value="Descrição: "/>
+  					<h:inputText id="descricao" value="#{escolaridadeBean.escolaridadeParaPesquisa.descricao}" lable="Descrição"/>
+  					
+  					<h:outputLabel for="situacao" value="Situação: "/>
+  					<p:selectOneMenu id="situacao" value="#{escolaridadeBean.escolaridadeParaPesquisa.situacao}" >
+  						<f:selectItem itemLabel="Todas as situações" itemValue="" />
+  						<f:selectItems value="#{escolaridadeBean.situacoes}" />
+  					</p:selectOneMenu>
+  					
+  				</h:panelGrid>
+				
+				<p:commandButton value="Novo"    update="panelPesquisa" action="#{escolaridadeBean.novo}"/>
+   				<p:commandButton disabled="#{escolaridadeBean.listaEstaVazia}" value="Alterar"
+   						 	update="panelPesquisa" action="#{escolaridadeBean.alterar}" />
+   				<p:commandButton id="btnExcluir" disabled="#{escolaridadeBean.listaEstaVazia}" value="Excluir"
+   							 update="tbLista" actionListener="#{escolaridadeBean.excluir}">
+   					<p:confirm header="Confirmação" 
+   							message="Confirma a exclusão da escolaridade selecionada?"
+   							icon="ui-icon-alert" />  
+   				</p:commandButton>
+
+  				<p:commandButton value="Consultar"  update="frmPrincipal" 
+  							actionListener="#{escolaridadeBean.consultar}"/>
+  				<p:commandButton disabled="#{escolaridadeBean.listaEstaVazia}" value="Detalhes"
+  							update="panelPesquisa" action="#{escolaridadeBean.visualizar}" />
+  				<p:commandButton value="Limpar"  update="frmPrincipal" 
+  							actionListener="#{escolaridadeBean.limpar}"/>
+  				
+ 			</p:panel>
+
+  			<p:dataTable id="tbLista" var="escolaridade" value="#{escolaridadeBean.lista}" paginator="true" rows="5"
+  						paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks}
+  						{NextPageLink} {LastPageLink} {RowsPerPageDropdown}" rowsPerPageTemplate="5,10,15"
+  						selection="#{escolaridadeBean.escolaridadeSelecionada}" selectionMode="single"
+  						rowKey="#{escolaridade}" emptyMessage="Nenhuma escolaridade encontrada">
+  				<f:facet name="header">Lista de Escolaridades</f:facet>
+  				<p:column>
+  					<f:facet name="header"><h:outputText value="Código"/> </f:facet>
+  					<h:outputText value="#{escolaridade.codigo}"/>
+  				</p:column>
+  				
+  				<p:column>
+  					<f:facet name="header"><h:outputText value="Descrição"/> </f:facet>
+  					<h:outputText value="#{escolaridade.descricao}"/>
+  				</p:column>
+  				
+  				<p:column>
+  					<f:facet name="header"><h:outputText value="Situação"/> </f:facet>
+  					<h:outputText value="#{escolaridade.situacao}"/>
+  				</p:column>
+  				
+  				<p:column>
+  					<f:facet name="header"><h:outputText value="Última atualização"/> </f:facet>
+  					<h:outputText value="#{escolaridade.dataUltimaAtualizacao.time}">
+  						<f:convertDateTime pattern="dd/MM/yyyy"/>
+  					</h:outputText>
+  				</p:column>
+  				
+  				<f:facet name="footer">  
+  					
+        		</f:facet> 
+  			</p:dataTable>
+    		
+  		</h:form>
+	</f:view>
+</h:body>
+
+</ui:define>
+</ui:composition>
+
+</html>
