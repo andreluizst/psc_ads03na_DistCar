@@ -3,6 +3,7 @@ package util;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
+// teste controle de versão GIT
 
 public class Parametros {
 	
